@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block app_content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                {{team}}
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                {% for member in team.team_members.all %}
+                        <h5>{{member.member.full_name}}</h5>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                {% for question in team.team_questions.all %}
+                        <h5>{{question.question.question_text}}</h5>
+                        <h5>{{question.base_points}}</h5>
+                        <h5>{{question.gain_points}}</h5>
+                        <h5>{{question.started_at}}</h5>
+                        <h5>{{question.ended_at}}</h5>
+                        <h5>{{question.is_completed}}</h5>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

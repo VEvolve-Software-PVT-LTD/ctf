@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block app_content %}
+ <!--start slider section-->
+        <section id="hero" class="hero-content hero-slider-section-one" style="height: 100px;">
+                <div class="container">
+                                    <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="hero-content-wrap">
+                                <div class="hero-content">
+                                    <h1>{{team}} score board</h1>
+                                    <p>Capture the flag contest team</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mobile-slider-area" style="margin-top: 200px;">
+                                <div class="slider-indicator">
+                                    <h5 style="color: white">Team Members </h5>  
+                                    <div class="download-app-button">
+                                        {% for member in team.team_members.all %}
+                                        <a href="#" class="download-btn">
+                                            <p>
+                                                <br> {{member.member.full_name}}
+                                            </p>
+                                        </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--end slider section-->
+
+        <!--start customers section-->
+        <div class="customers-section pt-40">
+            <div class="customers-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-4">
+               
+                        </div>
+                        <div class="col-md-6 col-sm-8">
+                            <div class="customers-content">
+                                <div class="owl-carousel owl-theme customers-slider">
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end customers section-->
+        <section class="product-counter-section ptb-50">
+            <div class="product-counter-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-6">
+                            <div class="counter-content-wrap">
+                                <span class="ti-cup"></span>
+                                <h6 class="counter-title"><strong>{{team}}</strong></h6>
+                                <p>Capture The Falg Contest Team</p>
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-sm-6">
+                            <ul class="counter-list list-inline text-right">
+                                <li>
+                                    <span class="count">{{solved_questions}}</span>
+                                    <span class="title">Questions Solved</span>
+                                </li>
+                                <li>
+                                    <span class="count">{{total_points}}</span>
+                                    <span class="title">Total Points</span>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--start promo section-->
+        <section class="promo-section ptb-90">
+            <div class="promo-section-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table">
+                                <thead class="bg-primary">
+                                    <tr>
+                                        <td>Question</td>
+                                        <td>Base Points</td>
+                                        <td>Gain Points</td>
+                                        <td>Status</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for question in team.team_questions.all %}
+                                    <tr>
+                                        <td>{{question.question.id}}</td>
+                                        <td>{{question.base_points}}</td>
+                                        <td>{{question.gain_points}}</td>
+                                        {% if question.is_completed %}
+                                            <td class="text-success">Completed</td>
+                                        {% else %}
+                                            <td class="text-warning">Process</td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--end promo section-->
+{% endblock %}

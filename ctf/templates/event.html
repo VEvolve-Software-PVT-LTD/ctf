@@ -1,0 +1,86 @@
+{% load static %}
+<html>
+  <head>
+    <script src="{% static 'django_eventstream/json2.js' %}"></script>
+    <script src="{% static 'django_eventstream/eventsource.min.js' %}"></script>
+    <script src="{% static 'django_eventstream/reconnecting-eventsource.js' %}"></script>
+    <script>
+     var resultData;
+      var logMessage = function (s) {
+        var outputDiv = document.getElementById('output');
+        outputDiv.innerHTML = outputDiv.innerHTML + s + '<br />';
+      };
+
+      var start = function () {
+        logMessage('connecting...');
+
+{% if last_id %}
+        var es = new ReconnectingEventSource('{{ url|safe }}', {
+          lastEventId: '{{ last_id }}'
+        });
+{% else %}
+        var es = new ReconnectingEventSource('{{ url|safe }}');
+{% endif %}
+
+        es.onopen = function () {
+          logMessage('connected');
+        };
+
+        es.onerror = function () {
+          logMessage('connection error');
+        };
+
+        es.addEventListener('stream-reset', function (e) {
+          e = JSON.parse(e.data);
+          logMessage('stream reset: ' + JSON.stringify(e.channels));
+        }, false);
+
+        es.addEventListener('stream-error', function (e) {
+          // hard stop
+          es.close();
+          e = JSON.parse(e.data);
+          logMessage('stream error: ' + e.condition + ': ' + e.text);
+        }, false);
+
+        es.addEventListener('message', function (e) {
+          //logMessage('message: ' + e.data);
+//					document.getElementById("ms").innerHTML = e.data
+                    var obj = JSON.parse(e.data);
+                    resultData = obj
+                    var byteArr = new Uint8Array(resultData);
+                    for (var i=0;i<byteArr.byteLength;i++){
+                       console.log(byteArr[i])
+                    }   
+                    gotResult(resultData);
+        }, false);
+        function gotResult(result){
+            console.log(result);
+            console.log(result.length)
+            var myTable= "<table><tr><td style='width: 100px; color: red;'>Col Head 1</td>";
+            myTable+= "<td style='width: 100px; color: red; text-align: right;'>Col Head 2</td>";
+            myTable+="<td style='width: 100px; color: red; text-align: right;'>Col Head 3</td></tr>";
+
+            myTable+="<tr><td style='width: 100px;                   '>---------------</td>";
+            myTable+="<td     style='width: 100px; text-align: right;'>---------------</td>";
+            myTable+="<td     style='width: 100px; text-align: right;'>---------------</td></tr>";
+
+          for (var i=0; i<result.length; i++) {
+            myTable+="<tr><td style='width: 100px;'>Number " + i + " is:</td>";
+            myTable+="<td style='width: 100px; text-align: right;'>" + result[i] + "</td>";
+            myTable+="<td style='width: 100px; text-align: right;'>" + result[i] + "</td></tr>";
+          }  
+           myTable+="</table>";
+
+           document.getElementById('app').innerHTML = myTable;    
+            }
+        };
+
+    </script>
+  </head>
+  <body onload="start();">
+    <div id="output"></div>
+		<p id="ms"></p>
+      
+      <div id="app"></div>
+    </body>
+</html>

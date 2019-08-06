@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block app_content %}
+ <!--start slider section-->
+        <section id="hero" class="hero-content hero-slider-section-one section-lg" style="height: 200px;">
+            <div class="hero-slider-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="hero-content-wrap">
+                                <div class="hero-content">
+                                    <h1>Capture The Flag</h1>
+                                    <p></p>
+                                    {% if request.user.is_authenticate %}
+                                        <div class="slider-action-btn">
+                                            <a href="{% url 'questions_list' %}" class="btn softo-solid-btn"><i class="fa fa-lock"></i>Questions</a>
+                                        </div>
+                                    {% else %}
+                                        <div class="slider-action-btn">
+                                            <a href="{% url 'login_view' %}" class="btn softo-solid-btn"><i class="fa fa-lock"></i>Login</a>
+                                        </div>                                    
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-shape">
+                <div class="river-wave"></div>
+                <div class="river-wave"></div>
+            </div>
+        </section>
+        <!--end slider section-->
+
+        <!--start customers section-->
+        <div class="customers-section pt-40">
+            <div class="customers-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-4">
+                            <div class="higlight-text">
+                                <p><strong>Info!</strong> Please read the instructions carefully before starting.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-8">
+                            <div class="customers-content">
+                                <div class="owl-carousel owl-theme customers-slider">
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end customers section-->
+
+        <!--start promo section-->
+        <section class="promo-section ptb-90">
+            <div class="promo-section-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="bg-secondary single-promo-section text-center">
+                                <div class="single-promo-content">
+                                    <span class="ti-face-smile  "></span>
+                                    <h6>Instruction 1</h6>
+                                    <p>Lorem ipsum dolor sit amet, eam ex probo tation tractatos. Ut vel hinc solet
+                                        tincidunt.</p>
+                                </div>
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="bg-secondary single-promo-section text-center">
+                                <div class="single-promo-content">
+                                    <span class="ti-vector"></span>
+                                    <h6>Instruction 2</h6>
+                                    <p>Lorem ipsum dolor sit amet, eam ex probo tation tractatos. Ut vel hinc solet
+                                        tincidunt.</p>
+                                </div>
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="bg-secondary single-promo-section text-center">
+                                <div class="single-promo-content">
+                                    <span class="ti-palette"></span>
+                                    <h6>Instruction 3</h6>
+                                    <p>Lorem ipsum dolor sit amet, eam ex probo tation tractatos. Ut vel hinc solet
+                                        tincidunt.</p>
+                                </div>
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="bg-secondary single-promo-section text-center">
+                                <div class="single-promo-content">
+                                    <span class="ti-headphone-alt"></span>
+                                    <h6>Instruction 4</h6>
+                                    <p>Lorem ipsum dolor sit amet, eam ex probo tation tractatos. Ut vel hinc solet
+                                        tincidunt.</p>
+                                </div>
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--end promo section-->
+{% endblock %}

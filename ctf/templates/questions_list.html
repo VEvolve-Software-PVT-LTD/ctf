@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block app_content %}
+ <!--start slider section-->
+        <section id="hero" class="hero-content hero-slider-section-one" style="height: 100px;">
+                <div class="container">
+                                    <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="hero-content-wrap">
+                                <div class="hero-content">
+                                    <h1>{{team}} score board</h1>
+                                    <p>Capture the flag contest team</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mobile-slider-area" style="margin-top: 200px;">
+                                <div class="slider-indicator">
+                                    <h5 style="color: white">Team Members </h5>  
+                                    <div class="download-app-button">
+                                        {% for member in team.team_members.all %}
+                                        <a href="#" class="download-btn">
+                                            <p>
+                                                <br> {{member.member.full_name}}
+                                            </p>
+                                        </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--end slider section-->
+        {% if messages %}
+        <div class="" 
+             role="alert">
+            {% for message in messages %}
+                <p class="text-success {{message.tags}}">
+                    {{message}}
+                </p>
+            <button 
+                    type="button" 
+                    class="close" 
+                    data-dismiss="alert" 
+                    aria-label="Close">
+                    <span aria-hidden="true">
+                        ×
+                    </span>
+            </button>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <section id="pricing" class="pricing-section ptb-90">
+            <div class="pricing-section-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="section-heading text-center">
+                                <h3>Questions List</h3>
+                                <p>Please find the flags </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="bg-color-sky-light">
+                            <div class="content-md container">
+                                <div class="row">
+                                    {% for question in questions %}
+                                    <div class="col-md-3" style="margin-top: 1%">
+                                        <!--start pricing single-->
+                                        <div class="pricing-single bg-secondary">
+                                            <div class="pricing-single-content">
+                                                <div class="mb-40">
+                                                    <span class="sub-price">Points {{question.question_points}}</span>
+                                                </div>
+                                                <div class="center-block">
+                                                    <a href="{% url 'question_detail' question.id %}"><button type="button" class="softo-btn-outline">question {{question.id}}</button></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--end pricing single-->
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <!--end row-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--end pricing-->
+{% endblock %}

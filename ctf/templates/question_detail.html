@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block app_content %}
+ <!--start slider section-->
+        <section id="hero" class="hero-content hero-slider-section-one" style="height: 100px;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="hero-content-wrap">
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+        </section>
+        <!--end slider section-->
+        <section class="product-counter-section ptb-50">
+            <div class="product-counter-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-6">
+                            <div class="counter-content-wrap">
+                                <span class="ti-cup"></span>
+                                <h6 class="counter-title"><strong>{{question.id}}</strong></h6>
+                                <p>Question</p>
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-sm-6">
+                            <ul class="counter-list list-inline text-right">
+                                <li>
+                                    <span class="count">{{team_question.base_points}}</span>
+                                    <span class="title">Base Points</span>
+                                </li>
+                                <li>
+                                    <span class="count">{{team_question.gain_points}}</span>
+                                    <span class="title">Gain Points</span>
+                                </li>
+                                <li>
+                                    <span class="count">{{team_question.clue_version}}</span>
+                                    <span class="title">Clues Taken</span>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+       <section class="testimonial-section bg-secondary ptb-90">
+            <div class="testimonial-wrap">
+                <div class="container">
+                            {% if messages %}
+                            <div class="" 
+                                 role="alert">
+                                {% for message in messages %}
+                                    <p class="{{message.tags}}">
+                                        {{message}}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="owl-carousel owl-theme testimonial-slider">
+                                <div class="item">
+                                    <div class="single-testimonial-item">
+                                        <span class="blockquote-icon"><i class="fa fa-quote-left"></i></span>
+                                        <div class="testimonial-content">
+                                            <h5 class="text-justify">{{question.question_text|linebreaks}}</h5>
+                                        </div>
+                                        {% for clue in taken_clues%}
+                                        <div class="alert alert-primary" role="alert">
+                                            clue:<span class="text-primary"> {{ clue.clue_text}}</span><br>
+                                            clue points: <span class="text-primary">{{clue.clue_points}} </span>
+                                        </div>
+                                        {% endfor%}
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="single-testimonial-item">
+                                        <span class="blockquote-icon"><i class="fa fa-quote-left"></i></span>
+                                        <div class="testimonial-content">
+                                            {% if team_question.is_completed %}
+                                                <span class="ti-cup fa-3x text-success counter" style="margin-left:200px;"></span>
+                                            <h5 class="text-success">Congratulations ! You Already Solved it</h5>                                             
+                                            {% else %}
+                                            <form method="post">
+                                                    {% csrf_token %}
+                                                    <div class="form-group">
+                                                        <label for="id_answer">{{form.answer.label_tag}}</label>
+                                                        <input 
+                                                               type="text" 
+                                                               class="form-control {% if form.answer.errors %} is-invalid {% endif %}"
+                                                               id="id_answer"
+                                                               name="answer"
+                                                               placeholder="Enter answer"
+                                                               value="{{form.answer.value|default:''}}"
+                                                               />
+                                                        {% if form.answer.errors %}
+                                                            <div class="invalid-feedback">
+                                                                {{form.answer.errors}}
+                                                            </div>
+                                                        {% endif %}
+
+                                                    </div>
+                                                    <button class="btn btn-block softo-solid-btn" type="submit" style="margin: 5%;">Submit</button>
+                                                </form>                                                
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            {% if team_question.is_completed %}
+                            {% else %}
+                                {% if clue_exist %}
+                                    <p>If you are ready to looe {{clue.clue_points}} Points</p>
+                                    <a href="{% url 'question_clue' question.id %}">Get Clue</a>
+                            
+                                {% else %}
+                                    Sorry No More  Clues
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>                
+            </div>
+        </section>
+{% endblock %}
+    
+

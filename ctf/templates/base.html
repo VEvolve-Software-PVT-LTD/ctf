@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--title-->
+    <title>Capture The Flag</title>
+    <!-- font-awesome css -->
+    <link rel="stylesheet" href="{% static 'assets/css/font-awesome.min.css' %}">
+    <!--themify icon-->
+    <link rel="stylesheet" href="{% static 'assets/css/themify-icons.css' %}">
+    <!-- magnific popup css-->
+    <link rel="stylesheet" href="{% static 'assets/css/magnific-popup.css' %}">
+    <!--owl carousel -->
+    <link href="{% static 'assets/css/owl.theme.default.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/owl.carousel.min.css' %}" rel="stylesheet">
+    <!-- bootstrap core css -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- custom css -->
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    <!-- responsive css -->
+    <link href="{% static 'assets/css/responsive.css' %}" rel="stylesheet">
+    <script src="{% static 'assets/js/vendor/modernizr-2.8.1.min.js' %}"></script>
+    
+    <!-- HTML5 Shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="{% static 'assets/jsvendor/html5shim.js' %}"></script>
+    <script src="{% static 'assets/jsvendor/respond.min.js' %}"></script>
+    <![endif]-->
+        <script src="{% static 'django_eventstream/json2.js' %}"></script>
+    <script src="{% static 'django_eventstream/eventsource.min.js' %}"></script>
+    <script src="{% static 'django_eventstream/reconnecting-eventsource.js' %}"></script>
+    {% block extra_code %}
+    {% endblock %}
+</head>
+<body>
+<!-- Preloader -->
+<div id="preloader">
+    <div id="loader"></div>
+</div>
+<!--end preloader-->
+<div id="main" class="main-content-wraper">
+    <div class="main-content-inner">
+        <!--start header section-->
+        <header class="header">
+            <!--start navbar-->
+            <div class="navbar navbar-default navbar-fixed-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="navbar-header page-scroll">
+                            <button type="button" 
+                                    class="navbar-toggle collapsed" 
+                                    data-toggle="collapse"
+                                    data-target="#myNavbar">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a 
+                               class="navbar-brand page-scroll" 
+                               href="{% url 'landing_page' %}">
+                                    <h5 style="color:white;">CAPTURE THE FLAG </h5>
+                            </a>
+                        </div>
+
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="navbar-collapse collapse" id="myNavbar">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="active">
+                                    <a 
+                                       class="page-scroll" 
+                                       href="{% url 'landing_page' %}">
+                                        Home
+                                    </a>
+                                </li>           
+                                {% if request.user.is_authenticated %}  
+                                        {% if request.user.is_superuser %}
+                                        <li class="active">
+                                             <a class="page-scroll" href="{% url 'team_rankings' %}">Team Ranks</a>
+                                        </li>
+                                        {% else %}
+                                         <li class="active">
+                                             <a class="page-scroll" href="{% url 'team_dash_board' request.user.team.id%}">Score Board</a>
+                                        </li> 
+                                        <li class="active">
+                                            <a 
+                                               class="page-scroll" 
+                                               href="{% url 'questions_list' %}">Questions
+                                            </a>
+                                        </li>                                
+                                        {% endif %}
+                                <li class="active"><a class="page-scroll" href="{% url 'logout_view' %}">Logout</a></li>
+                                {% else %}
+                                    <li class="active"><a class="page-scroll" href="{% url 'login_view' %}">Login</a></li>                                   
+                                {% endif %}
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--end navbar-->
+        </header>
+        <!--end header section-->
+        {% block app_content %}
+        {% endblock %}
+       
+
+        <!--start footer section-->
+        <footer class="footer-section bg-secondary ptb-60">
+            <div class="footer-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-3">
+                            <div class="footer-single-col text-center">
+                                <div class="footer-social-list">
+                                    <ul class="list-inline">
+                                       
+                                    </ul>
+                                </div>
+                                <div class="copyright-text">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--end footer section-->
+
+    </div><!--end main content inner-->
+</div>
+<!--end main container -->
+
+
+<!--=========== all js file link ==============-->
+
+
+<!-- main jQuery -->
+<script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>
+
+<!-- bootstrap core js -->
+<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+
+<!-- smothscroll -->
+<script src="{% static 'assets/js/jquery.easeScroll.min.js' %}"></script>
+
+<!--owl carousel-->
+<script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+
+<!-- scrolling nav -->
+<script src="{% static 'assets/js/jquery.easing.min.js' %}"></script>
+
+<!--fullscreen background video js-->
+
+<!--typed js -->
+<script src="{% static 'assets/js/typed.min.js' %}"></script>
+
+<!--magnific popup js-->
+<script src="{% static 'assets/js/magnific-popup.min.js' %}"></script>
+
+<!-- custom script -->
+<script src="{% static 'assets/js/scripts.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+    {% block extra_code %}
+        <script>
+      var logMessage = function (s) {
+        var outputDiv = document.getElementById('output');
+        outputDiv.innerHTML = outputDiv.innerHTML + s + '<br />';
+      };
+
+      var start = function () {
+        logMessage('connecting...');
+
+{% if last_id %}
+        var es = new ReconnectingEventSource('{{ url|safe }}', {
+          lastEventId: '{{ last_id }}'
+        });
+{% else %}
+        var es = new ReconnectingEventSource('{{ url|safe }}');
+{% endif %}
+
+        es.onopen = function () {
+          logMessage('connected');
+        };
+
+        es.onerror = function () {
+          logMessage('connection error');
+        };
+
+        es.addEventListener('stream-reset', function (e) {
+          e = JSON.parse(e.data);
+          logMessage('stream reset: ' + JSON.stringify(e.channels));
+        }, false);
+
+        es.addEventListener('stream-error', function (e) {
+          // hard stop
+          es.close();
+          e = JSON.parse(e.data);
+          logMessage('stream error: ' + e.condition + ': ' + e.text);
+        }, false);
+
+        es.addEventListener('message', function (e) {
+          //logMessage('message: ' + e.data);
+					document.getElementById("ms").innerHTML = e.data
+        }, false);
+      };    
+        </script>
+    {% endblock %}
+{% block app_content %}
+ <!--start slider section-->
+        <section id="hero" class="hero-content hero-slider-section-one" style="height: 100px;">
+                <div class="container">
+                                    <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="hero-content-wrap">
+                             
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mobile-slider-area" style="margin-top: 200px;">
+                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--end slider section-->
+
+        <section class="promo-section ptb-90">
+            <div class="promo-section-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4 offset-md-4">
+                                    <div id="output"></div>
+		              <p id="ms"></p>
+                            <table class="table">
+                                <thead class="text-center bg-primary">
+                                    <tr>
+                                        <td>Team</td>
+                                        <td>Total Points</td>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    {% for team_score in team_scores %}
+                                    <tr>
+                                        <td>{{team_score.team__team_name}}</td>
+                                        <td>{{team_score.count}}</td>
+                                    </tr>
+                                    {% endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+{% endblock %}

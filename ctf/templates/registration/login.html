@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block app_content %}
+ <!--start slider section-->
+        <section id="hero" class=" hero-slider-section-one" style="height: 100px;">
+                
+        </section>
+        <div class="container" style="margin: 10%;">
+            <div class="row">
+            
+                <div class="col-lg-4 offset-lg-3">
+                    <form method="post">
+                    {% csrf_token %}
+                            <div class="form-group">
+                                            <label for="id_username">{{form.username.label_tag}}</label>
+                                            <input 
+                                                   type="text" 
+                                                   class="form-control {% if form.username.errors %} is-invalid {% endif %}"
+                                                   id="id_username"
+                                                   name="username"
+                                                   placeholder="Enter Username"
+                                                   value="{{form.username.value|default:''}}"
+                                                   />
+                                            {% if form.username.errors %}
+                                                <div class="invalid-feedback">
+                                                    {{form.username.errors}}
+                                                </div>
+                                            {% endif %}
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="id_username">{{form.password.label_tag}}</label>
+                                            <input 
+                                                   type="password" 
+                                                   class="form-control {% if form.password.errors %} is-invalid {% endif %} bg-primary"
+                                                   id="id_password"
+                                                   name="password"
+                                                   placeholder="Enter Password"
+                                                   value="{{form.password.value|default:''}}"
+                                                   />
+                                            {% if form.password.errors %}
+                                                <div class="invalid-feedback">
+                                                    {{form.password.errors}}
+                                                </div>
+                                            {% endif %}
+
+                                        </div>                                        
+                                        <button type="submit" class=" btn btn-block">Login</button>
+                                    </form>
+                
+                    </div>
+            </div>
+        
+        </div>
+{% endblock %}

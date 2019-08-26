@@ -33,6 +33,32 @@
         <script src="{% static 'django_eventstream/json2.js' %}"></script>
     <script src="{% static 'django_eventstream/eventsource.min.js' %}"></script>
     <script src="{% static 'django_eventstream/reconnecting-eventsource.js' %}"></script>
+    <style type="text/css">
+        .arrow {
+    color: white;
+    width: 210px;
+    height: 40px;
+    margin: 2px auto;
+    background: #4FC6DB;
+    position: relative;
+    line-height: 37px;
+    padding-left: 20px;
+    font-family: arial;
+}
+
+.arrow:before {
+    content: '.';
+    text-indent: -9999;
+    position: absolute;
+    width: 0;
+    height: 0;
+    right: -10px;
+    top: -1px;
+    border-top: 21px solid white;
+    border-bottom: 20px solid white;
+    border-left: 15px solid #4FC6DB;
+}
+    </style>
     {% block extra_code %}
     {% endblock %}
 </head>
@@ -70,7 +96,7 @@
                         <!-- Collect the nav links, forms, and other content for toggling -->
                         <div class="navbar-collapse collapse" id="myNavbar">
                             <ul class="nav navbar-nav navbar-right">
-                                <li class="active">
+                                <li class="">
                                     <a 
                                        class="page-scroll" 
                                        href="{% url 'landing_page' %}">
@@ -79,23 +105,24 @@
                                 </li>           
                                 {% if request.user.is_authenticated %}  
                                         {% if request.user.is_superuser %}
-                                        <li class="active">
+                                        <li class="">
                                              <a class="page-scroll" href="{% url 'team_rankings' %}">Team Ranks</a>
                                         </li>
                                         {% else %}
-                                         <li class="active">
+                                         <li class="">
                                              <a class="page-scroll" href="{% url 'team_dash_board' request.user.team.id%}">Score Board</a>
                                         </li> 
-                                        <li class="active">
+                                        <li class="">
                                             <a 
                                                class="page-scroll" 
                                                href="{% url 'questions_list' %}">Questions
                                             </a>
                                         </li>                                
                                         {% endif %}
-                                <li class="active"><a class="page-scroll" href="{% url 'logout_view' %}">Logout</a></li>
+                                <li class=""><a class="page-scroll" href="{% url 'logout_view' %}">Logout</a></li>
                                 {% else %}
-                                    <li class="active"><a class="page-scroll" href="{% url 'login_view' %}">Login</a></li>                                   
+                                    <li class=""><a class="page-scroll" href="{% url 'login_view' %}">Login</a></li>
+                                    <!-- <li class=""><a class="page-scroll" href="{% url 'team_register_view' %}">Team Register</a></li> -->
                                 {% endif %}
                             </ul>
                         </div>
@@ -108,31 +135,6 @@
         <!--end header section-->
         {% block app_content %}
         {% endblock %}
-       
-
-        <!--start footer section-->
-        <footer class="footer-section bg-secondary ptb-60">
-            <div class="footer-wrap">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6 col-md-offset-3">
-                            <div class="footer-single-col text-center">
-                                <div class="footer-social-list">
-                                    <ul class="list-inline">
-                                       
-                                    </ul>
-                                </div>
-                                <div class="copyright-text">
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!--end footer section-->
-
     </div><!--end main content inner-->
 </div>
 <!--end main container -->

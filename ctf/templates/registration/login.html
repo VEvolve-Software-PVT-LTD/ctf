@@ -1,13 +1,20 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block app_content %}
  <!--start slider section-->
-        <section id="hero" class=" hero-slider-section-one" style="height: 100px;">
+     <link rel="stylesheet" href="https://unpkg.com/efrolic@0.2.9/dist/css/efrolic.min.css">
+
+        <section id="hero" class=" hero-slider-section-one" style="height: 90px;">
                 
         </section>
-        <div class="container" style="margin: 10%;">
+        <div class="container" style="margin-top: 10%;">
             <div class="row">
-            
-                <div class="col-lg-4 offset-lg-3">
+                <!-- <div class="col-lg-1"></div> -->
+                <div class="col-lg-4">
+                      <img src="{% static 'assets/img/welcome.jpg' %}">
+                 </div> 
+                 <div class="col-lg-1"></div>             
+                <div class="col-lg-4" style="padding-top: 1%;padding-left: 4%;">
                     <form method="post">
                     {% csrf_token %}
                             <div class="form-group">
@@ -16,8 +23,7 @@
                                                    type="text" 
                                                    class="form-control {% if form.username.errors %} is-invalid {% endif %}"
                                                    id="id_username"
-                                                   name="username"
-                                                   placeholder="Enter Username"
+                                                   name="username"                                                  
                                                    value="{{form.username.value|default:''}}"
                                                    />
                                             {% if form.username.errors %}
@@ -34,7 +40,6 @@
                                                    class="form-control {% if form.password.errors %} is-invalid {% endif %} bg-primary"
                                                    id="id_password"
                                                    name="password"
-                                                   placeholder="Enter Password"
                                                    value="{{form.password.value|default:''}}"
                                                    />
                                             {% if form.password.errors %}
@@ -44,10 +49,11 @@
                                             {% endif %}
 
                                         </div>                                        
-                                        <button type="submit" class=" btn btn-block">Login</button>
+                                        <button type="submit" class="e-btn outlined purple btn-block">Login</button>
                                     </form>
                 
                     </div>
+
             </div>
         
         </div>

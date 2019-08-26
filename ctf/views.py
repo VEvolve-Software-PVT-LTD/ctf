@@ -29,8 +29,8 @@ from django.template import RequestContext
 from django.db.models import Sum
 from django_eventstream import get_current_event_id, send_event
 from django_eventstream.channelmanager import DefaultChannelManager
-from kafka import KafkaConsumer
-from kafka import KafkaProducer
+#from kafka import KafkaConsumer
+#from kafka import KafkaProducer
 from ctf import models
 from ctf.forms import AnswerForm
 
@@ -41,7 +41,7 @@ redis_connection = get_redis_connection("default")
 r = redis.Redis()
 
 # kafka producer
-producer = KafkaProducer(bootstrap_servers='localhost:9092')
+#producer = KafkaProducer(bootstrap_servers='localhost:9092')
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -313,10 +313,7 @@ def team_rankings(request):
     context=  {}
     context['url'] = '/events/'
     context['last_id'] = get_current_event_id(['time'])
-    context['question_id'] = get_current_event_id(['begin'])
-    scores = models.TeamQuestion.objects.filter(is_completed=True)
-    team_scores = scores.values('team__team_name').annotate(count=Sum('gain_points'))
-    context['team_scores'] = team_scores
+    # context['question_id'] = get_current_event_id(['begin'])
     return render(request, 
                   'event.html', 
                   context
@@ -328,9 +325,13 @@ import json
 
 def _send_worker():
     while True:
+        # total_page = 'hi'
         question_action = r.get('question_action').decode('utf-8')
+        print(question_action)
         answer_action = r.get('answer_action').decode('utf-8')
+        print(answer_action)
         scores = models.TeamQuestion.objects.filter(is_completed=True)
+        print(scores)
         team_scores = list(scores.values('team__team_name').annotate(count=Sum('gain_points')).order_by('-count'))
         data = json.dumps(team_scores)
         _table_start = '<div class="container"><div class="row"></div> <div class="col-lg-4"><table class="table"><thead class="bg-primary"><tr><td>Team</td><td>Score</td></tr></thead>'
@@ -340,7 +341,7 @@ def _send_worker():
             instance = '<tr><td>{}</td><td>{}</td></tr>'.format(team_scores[i]['team__team_name'], team_scores[i]['count'])
             _table_start = _table_start + instance
         _table_start = _table_start + _table_end
-       
+        print("a")
         _html_data = '<div class="container" style="margin-top:5%;"> <div class="row"><div class="col-md-4">'
         _table_start = '<table class="table"><thead class="bg-primary"><tr><td>Team</td><td>Score</td></tr></thead>'
         for i in range(len(team_scores)):
@@ -350,7 +351,7 @@ def _send_worker():
         _table_start = _table_start + _table_end
         _html_data = _html_data+_table_start
         
-#        _top_three_data = '<div class="col-lg-4"><div class="card">'
+        _top_three_data = '<div class="col-lg-4"><div class="card">'
         _top_three_data = '<div class="col-lg-4"><div class="row">'
         _top_three_end = '</div></div>'
         for i in range(3):
@@ -384,17 +385,14 @@ def _send_worker():
             _second_section = _second_section + _team_data_start
         _second_section_end = '</div></div>'
         _second_section = _second_section + _second_section_end
-        
+        print("b")
+        print("hello")
         total_page = _html_data + _second_section
         send_event('time', 'message',total_page)
         time.sleep(1)
     
 
-def _send_worker2():
-    while True:
-        data = 'lionis started question 1'
-        send_event('begin', 'question', data)
-        time.sleep(1)
+
         
 def _db_ready():
     from django.db import DatabaseError
@@ -409,7 +407,7 @@ def _db_ready():
 if _db_ready():
     threds = []
     send_thread = threading.Thread(target=_send_worker)
-    send_thread.daemon = True
+    send_thread.daemon = False
     send_thread.start()
     
     
@@ -429,3 +427,7 @@ def answer_question(request):
     return redirect('question_detail', pk=instance_question.id)
 
 
+
+
+def team_register(request):
+    return render(request, 'team_register.html')

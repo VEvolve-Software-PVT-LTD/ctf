@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block app_content %}
  <!--start slider section-->
-        <section id="hero" class="hero-content hero-slider-section-one" style="height: 100px;">
+        <section id="hero" class="hero-content hero-slider-section-one" style="height: 90px;">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-8">
@@ -82,7 +82,7 @@
                                         <div class="testimonial-content">
                                             {% if team_question.is_completed %}
                                                 <span class="ti-cup fa-3x text-success counter" style="margin-left:200px;"></span>
-                                            <h5 class="text-success">Congratulations ! You Already Solved it</h5>                                             
+                                                    <h5 class="text-success">Congratulations ! You Already Solved it</h5>                                             
                                             {% else %}
                                             <form method="post">
                                                     {% csrf_token %}

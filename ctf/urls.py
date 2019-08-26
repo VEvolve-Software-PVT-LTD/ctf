@@ -27,7 +27,12 @@ urlpatterns = [
         r'^logout/$', 
         auth_views.LogoutView.as_view(), 
         name='logout_view',
-        ),    
+        ),
+    url(
+        r'^register/$',
+        views.team_register,
+        name='team_register_view'
+    ),
     url(r'^$', views.landing_page, name='landing_page'),
     
 ]

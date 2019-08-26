@@ -14,4 +14,4 @@ class AnswerForm(forms.Form):
         super().clean()
         strip_tags(self.cleaned_data['answer'])
         return self.cleaned_data
-    
+   

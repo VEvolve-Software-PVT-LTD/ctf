@@ -6,7 +6,7 @@ import threading
 import json
 import redis
 from datetime import datetime
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,reverse
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -21,7 +21,9 @@ from django.http import (
     Http404,
     HttpResponse,
     HttpResponseServerError,
+    HttpResponseRedirect,
 )
+from django.views.generic import FormView
 from django_redis import get_redis_connection
 from django.conf import settings
 from django.shortcuts import render_to_response
@@ -29,10 +31,11 @@ from django.template import RequestContext
 from django.db.models import Sum
 from django_eventstream import get_current_event_id, send_event
 from django_eventstream.channelmanager import DefaultChannelManager
+# import datetime
 #from kafka import KafkaConsumer
 #from kafka import KafkaProducer
 from ctf import models
-from ctf.forms import AnswerForm
+from ctf.forms import AnswerForm,TeamCreateForm,MemberForm
 
 # django redis connection.
 redis_connection = get_redis_connection("default")
@@ -122,9 +125,78 @@ def get_questions_list(request):
     else:
         questions = list(models.Question.objects.all())
         cache.set(key, questions, timeout=CACHE_TTL)
+
+    print(type(questions))
+    team_open_questions = list(models.TeamQuestion.objects.filter(team=request.user.team))
+    print(team_open_questions)
+    top_ids = []
+    total_qids = []
+    tops = []
+
+    for i in questions:
+        total_qids.append(i.id)
+    print(total_qids)
+    
+    for i in team_open_questions:
+        top_ids.append(i.question.id)
+    print(top_ids)
+    question_bank = []
+    instance_question = {}
+
+    for i in total_qids:
+        if i in top_ids:
+            question = models.TeamQuestion.objects.get(question__id=i, team=request.user.team)
+            instance_question['id']=i
+            instance_question['status'] = question.is_completed
+            instance_question['points'] = question.base_points
+            question_bank.append(instance_question)
+            instance_question = {}
+        else:
+            question = models.Question.objects.get(id=i)
+            instance_question['id'] = i
+            instance_question['status'] = 'unopen'
+            instance_question['points'] = question.question_points
+            question_bank.append(instance_question)
+            instance_question = {}
+
+    print(question_bank)
+    # question_bank = []
+    # tq_questions = []
+    # team_questions =  list(models.TeamQuestion.objects.filter(team=request.user.team))
+    # for question in questions:
+    #     question_bank.append(question.id)
+    # for tq in team_questions:
+    #     tq_questions.append(tq.question.id)
+    # print(tq_questions)
+    # un_opened_questions = set(question_bank)-set(tq_questions)
+    # team_questions_unopened = list(models.Question.objects.filter(id__in=un_opened_questions))
+    # total_questions = team_questions_unopened+ team_questions
+    # print(total_questions)    
+
+    # final_questions = []
+    # question_instance = {}
+    # print("total questions\n\n\n")
+    # for i in total_questions:
+    #     print(i)
+    #     print(i.id)
+    # for question in questions:
+    #     for tq in team_questions:
+    #         if tq.id 
+    #         if question.id == tq.question.id:
+    #             question_instance['id'] = question.id
+    #             question_instance['status'] = tq.is_completed 
+    #             question_bank.append(question_instance)
+    #             question_instance = {}
+    #         else:
+    #             question_instance['id'] = question.id
+    #             question_instance['status'] = 'Not Opened'
+    #             question_bank.append(question_instance)
+    #             question_instance = {}
+    # print(question_bank)
+    # print(list(unopened_questions))    
     return render(request, 
                   'questions_list.html', 
-                  {'questions': questions}
+                  {'questions': question_bank}
                  )
 
 
@@ -222,7 +294,7 @@ def get_clue(request, pk):
     id=pk
     question_instance = models.Question.objects.get(id=id)
     user_key = '{}-key'.format(request.user.team)
-    currect_action = "Taking Clue For Question Number{}".format(question_instance.id)
+    current_action = "Taking Clue For Question Number{}".format(question_instance.id)
     r.set(user_key, current_action)
     team_question = models.TeamQuestion.objects.get(
         question=question_instance, 
@@ -297,9 +369,12 @@ class TeamDashBoard(DetailView):
         context['solved_questions'] = models.TeamQuestion.objects.filter(
             team=self.request.user.team, 
             is_completed=True).count()
-        context['total_points'] = models.TeamQuestion.objects.filter(
+        team_points = models.TeamQuestion.objects.filter(
             team=self.request.user.team, 
             is_completed=True).aggregate(Sum('gain_points'))
+        context['total_points'] = team_points['gain_points__sum']
+        context['form'] = MemberForm
+        context['form_action_url'] = reverse_lazy('add_team_member')
         return context
 
     
@@ -325,69 +400,69 @@ import json
 
 def _send_worker():
     while True:
-        # total_page = 'hi'
-        question_action = r.get('question_action').decode('utf-8')
-        print(question_action)
-        answer_action = r.get('answer_action').decode('utf-8')
-        print(answer_action)
-        scores = models.TeamQuestion.objects.filter(is_completed=True)
-        print(scores)
-        team_scores = list(scores.values('team__team_name').annotate(count=Sum('gain_points')).order_by('-count'))
-        data = json.dumps(team_scores)
-        _table_start = '<div class="container"><div class="row"></div> <div class="col-lg-4"><table class="table"><thead class="bg-primary"><tr><td>Team</td><td>Score</td></tr></thead>'
-        _body_data = '<tr><td>{}</td><td>{}</td></tr>'
-        _table_end = '</tr></thead></table></div>'
-        for i in range(len(team_scores)):
-            instance = '<tr><td>{}</td><td>{}</td></tr>'.format(team_scores[i]['team__team_name'], team_scores[i]['count'])
-            _table_start = _table_start + instance
-        _table_start = _table_start + _table_end
-        print("a")
-        _html_data = '<div class="container" style="margin-top:5%;"> <div class="row"><div class="col-md-4">'
-        _table_start = '<table class="table"><thead class="bg-primary"><tr><td>Team</td><td>Score</td></tr></thead>'
-        for i in range(len(team_scores)):
-            instance = '<tr><td>{}</td><td>{}</td></tr>'.format(team_scores[i]['team__team_name'], team_scores[i]['count'])
-            _table_start = _table_start + instance
-        _table_end = '</tr></thead></table></div>'
-        _table_start = _table_start + _table_end
-        _html_data = _html_data+_table_start
+        total_page = 'hi'
+        # question_action = r.get('question_action').decode('utf-8')
+        # print(question_action)
+        # answer_action = r.get('answer_action').decode('utf-8')
+        # print(answer_action)
+        # scores = models.TeamQuestion.objects.filter(is_completed=True)
+        # print(scores)
+        # team_scores = list(scores.values('team__team_name').annotate(count=Sum('gain_points')).order_by('-count'))
+        # data = json.dumps(team_scores)
+        # _table_start = '<div class="container"><div class="row"></div> <div class="col-lg-4"><table class="table"><thead class="bg-primary"><tr><td>Team</td><td>Score</td></tr></thead>'
+        # _body_data = '<tr><td>{}</td><td>{}</td></tr>'
+        # _table_end = '</tr></thead></table></div>'
+        # for i in range(len(team_scores)):
+        #     instance = '<tr><td>{}</td><td>{}</td></tr>'.format(team_scores[i]['team__team_name'], team_scores[i]['count'])
+        #     _table_start = _table_start + instance
+        # _table_start = _table_start + _table_end
+        # print("a")
+        # _html_data = '<div class="container" style="margin-top:5%;"> <div class="row"><div class="col-md-4">'
+        # _table_start = '<table class="table"><thead class="bg-primary"><tr><td>Team</td><td>Score</td></tr></thead>'
+        # for i in range(len(team_scores)):
+        #     instance = '<tr><td>{}</td><td>{}</td></tr>'.format(team_scores[i]['team__team_name'], team_scores[i]['count'])
+        #     _table_start = _table_start + instance
+        # _table_end = '</tr></thead></table></div>'
+        # _table_start = _table_start + _table_end
+        # _html_data = _html_data+_table_start
         
-        _top_three_data = '<div class="col-lg-4"><div class="card">'
-        _top_three_data = '<div class="col-lg-4"><div class="row">'
-        _top_three_end = '</div></div>'
-        for i in range(3):
-            inner_data = '<div class="col-lg-12 col-md-12" style="margin-top:2%;"></div>'
+        # _top_three_data = '<div class="col-lg-4"><div class="card">'
+        # _top_three_data = '<div class="col-lg-4"><div class="row">'
+        # _top_three_end = '</div></div>'
+        # for i in range(3):
+        #     inner_data = '<div class="col-lg-12 col-md-12" style="margin-top:2%;"></div>'
             
-            _top_three_data = _top_three_data + inner_data
-        _top_three_data = _top_three_data+_top_three_end        
-        _html_data = _html_data + _top_three_data
+        #     _top_three_data = _top_three_data + inner_data
+        # _top_three_data = _top_three_data+_top_three_end        
+        # _html_data = _html_data + _top_three_data
         
         
-        _actions_data = '<div class="col-lg-4 col-md-4">'
-        _inner_action_data1 = '<div class="e-alert snack sky ePull" style="margin-top:2%;"><h4>{}</h4></div>'.format(question_action)
-        _inner_action_data2 = '<div class="e-alert snack success" style="margin-top:2%;"><h4>{}</h4></div>'.format(answer_action)
-        _actions_end = '</div>'
-        _actions_data = _actions_data+_inner_action_data1+_inner_action_data2+_actions_end
-        _html_data = _html_data + _actions_data
+        # _actions_data = '<div class="col-lg-4 col-md-4">'
+        # _inner_action_data1 = '<div class="e-alert snack sky ePull" style="margin-top:2%;"><h4>{}</h4></div>'.format(question_action)
+        # _inner_action_data2 = '<div class="e-alert snack success" style="margin-top:2%;"><h4>{}</h4></div>'.format(answer_action)
+        # _actions_end = '</div>'
+        # _actions_data = _actions_data+_inner_action_data1+_inner_action_data2+_actions_end
+        # _html_data = _html_data + _actions_data
         
-        _second_section = '<div class="container"><div class="row">'
-        for i in range(len(team_scores)):
-            _team_action_key = team_scores[i]['team__team_name']+'-key'
-            if r.exists(_team_action_key):                
-                _team_action = r.get(_team_action_key).decode('utf-8')
-            else:
-                _team_action = 'No Actions Yet.'
-            _team_data_start = '<div class="col-lg-4 col-md-4 e-card" style="margin:1%;"><div cass="e-card">\
-                                <div class="card-body"><h5 class="card-title text-primary">{}</h5><h6>action: {}</h6>\
-                                <a class="e-btn purple inverted">Details</a>&emsp;&emsp;&emsp;&emsp;\
-                                <a class="e-btn danger inverted danger">Points:<span class="text-primary"> {}</span></a></div></div></div>'.format(team_scores[i]['team__team_name'], _team_action, team_scores[i]['count'])
+        # _second_section = '<div class="container"><div class="row">'
+        # for i in range(len(team_scores)):
+        #     _team_action_key = team_scores[i]['team__team_name']+'-key'
+        #     if r.exists(_team_action_key):                
+        #         _team_action = r.get(_team_action_key).decode('utf-8')
+        #     else:
+        #         _team_action = 'No Actions Yet.'
+        #     _team_data_start = '<div class="col-lg-4 col-md-4 e-card" style="margin:1%;"><div cass="e-card">\
+        #                         <div class="card-body"><h5 class="card-title text-primary">{}</h5><h6>action: {}</h6>\
+        #                         <a class="e-btn purple inverted">Details</a>&emsp;&emsp;&emsp;&emsp;\
+        #                         <a class="e-btn danger inverted danger">Points:<span class="text-primary"> {}</span></a></div></div></div>'.format(team_scores[i]['team__team_name'], _team_action, team_scores[i]['count'])
             
             
-            _second_section = _second_section + _team_data_start
-        _second_section_end = '</div></div>'
-        _second_section = _second_section + _second_section_end
-        print("b")
-        print("hello")
-        total_page = _html_data + _second_section
+        #     _second_section = _second_section + _team_data_start
+        # _second_section_end = '</div></div>'
+        # _second_section = _second_section + _second_section_end
+        # print("b")
+        # print("hello")
+        # total_page = _html_data + _second_section
         send_event('time', 'message',total_page)
         time.sleep(1)
     
@@ -407,7 +482,7 @@ def _db_ready():
 if _db_ready():
     threds = []
     send_thread = threading.Thread(target=_send_worker)
-    send_thread.daemon = False
+    send_thread.daemon = True
     send_thread.start()
     
     
@@ -427,7 +502,35 @@ def answer_question(request):
     return redirect('question_detail', pk=instance_question.id)
 
 
+class TeamRegisterView(FormView):
+    form_class = TeamCreateForm
+    template_name = 'team_register.html'
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(reverse('login_view'))
+
+    def form_invalid(self, form):
+        print(form.errors)
+
+team_register = TeamRegisterView.as_view()
 
 
-def team_register(request):
-    return render(request, 'team_register.html')
+def registration_closed(request):
+    return render(request, 'registration_closed.html')
+
+
+@login_required
+def add_team_member(request):
+    if request.method == 'POST':
+        form = MemberForm(request.POST)
+        if form.is_valid():
+            member = form.cleaned_data['member']
+            member_instance = models.Member.objects.create(
+                full_name=member,
+            )
+            team_member = models.TeamMember.objects.create(
+                team=request.user.team,
+                member=member_instance,
+            )
+            return redirect('team_dash_board', pk=request.user.team.id)

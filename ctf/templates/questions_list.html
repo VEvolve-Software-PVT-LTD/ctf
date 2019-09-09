@@ -1,37 +1,30 @@
 {% extends 'base.html' %}
+{% load static %}
+    {% block extra_code %}
+     <link href="{% static 'assets/css/efrolic.min.css' %}" rel="stylesheet">      
+     <style type="text/css">
+            input{
+                    border:2px solid #FF0000;
+            }
+        .team_member{
+            text-align: center;
+        }            
+
+     </style>
+    {% endblock %}
 {% block app_content %}
  <!--start slider section-->
-        <section id="hero" class="hero-content hero-slider-section-one" style="height: 100px;">
+        <section id="hero" class="hero-content hero-slider-section-one" style="height: 90px;">
                 <div class="container">
-                                    <div class="container">
                     <div class="row">
                         <div class="col-md-8">
                             <div class="hero-content-wrap">
-                                <div class="hero-content">
-                                    <h1>{{team}} score board</h1>
-                                    <p>Capture the flag contest team</p>
-                                </div>
+                                
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mobile-slider-area" style="margin-top: 200px;">
-                                <div class="slider-indicator">
-                                    <h5 style="color: white">Team Members </h5>  
-                                    <div class="download-app-button">
-                                        {% for member in team.team_members.all %}
-                                        <a href="#" class="download-btn">
-                                            <p>
-                                                <br> {{member.member.full_name}}
-                                            </p>
-                                        </a>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
-                </div>
-            </div>
+                </div>                
         </section>
         <!--end slider section-->
         {% if messages %}
@@ -59,7 +52,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="section-heading text-center">
-                                <h3>Questions List</h3>
+                                <h3>Flags List</h3>
                                 <p>Please find the flags </p>
                             </div>
                         </div>
@@ -70,14 +63,43 @@
                                 <div class="row">
                                     {% for question in questions %}
                                     <div class="col-md-3" style="margin-top: 1%">
+                                        <div class="e-card">
+                                            <div class="card-body">
+                                                <h5 class="card-title info team_member">Flag {{question.id}}</h5><br>
+                                                <a class="e-btn plane inverted primary">Points: {{ question.points}}</a>
+                                                {% if question.status == True %}
+                                                <a class="e-btn plane inverted success" href="{% url 'question_detail' question.id %}">
+                                                    Done
+                                                </a>
+                                                {% else %}
+                                                    {% if question.status == 'unopen' %}
+                                                        <a class="e-btn plane inverted danger" href="{% url 'question_detail' question.id %}">
+                                                                Start
+                                                        </a>                                                    
+                                                    {% else %}
+                                                        <a class="e-btn plane inverted " href="{% url 'question_detail' question.id %}">
+                                                            Doing
+                                                        </a>                                                    
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>                                            
+                                        </div>
+
                                         <!--start pricing single-->
-                                        <div class="pricing-single bg-secondary">
+                                        <!-- <div class="pricing-single bg-secondary">
                                             <div class="pricing-single-content">
                                                 <div class="mb-40">
-                                                    <span class="sub-price">Points {{question.question_points}}</span>
+                                                    <span class="sub-price">Points {{question.points}}</span>
                                                 </div>
                                                 <div class="center-block">
-                                                    <a href="{% url 'question_detail' question.id %}"><button type="button" class="softo-btn-outline">question {{question.id}}</button></a>
+                                                    {% if question.status == 'False' %}
+                                                    <a href="{% url 'question_detail' question.id %}"><button type="button" class="softo-btn-outline e-btn infor">question {{question.id}}</button></a>
+                                                    {% else %}
+                                                    <a href="{% url 'question_detail' question.id %}"><button type="button" class="softo-btn-outline e-btn success">question {{question.id}}</button></a>  
+                                                    {% endif %}
+                                                    {% if question.status == 'Not Opened' %}
+                                                    <a href="{% url 'question_detail' question.id %}"><button type="button" class="softo-btn-outline e-btn danger">question {{question.id}}</button></a> 
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>

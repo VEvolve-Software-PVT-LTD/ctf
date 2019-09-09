@@ -34,6 +34,7 @@ if have_channels():
     INSTALLED_APPS.append('channels')
 INSTALLED_APPS.extend([
     'django_eventstream',
+    'crispy_forms',
 ])
 
 ASGI_APPLICATION = "gectf.routing.application"
@@ -146,3 +147,5 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 TEAM_CACHE = 'vev/1278/ctf-teams'
 QUESTIONS_CACHE = 'vev/1278/ctf-questions'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

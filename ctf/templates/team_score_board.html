@@ -1,7 +1,90 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+    {% block extra_code %}
+     <link href="{% static 'assets/css/efrolic.min.css' %}" rel="stylesheet">      
+     <style type="text/css">
+        .team_member{
+            text-align: center;
+        }
+        .team_hr{
+            color: solid 1px purple;
+        }
+        .team_text{
+            font-size: 15px;
+            background-color: #9400D3;
+            height: 30px;
+            color: #ffffff;
+            text-align: center;
+        }
+        .team_card{
+            height: 20vh;
+            border: 1px solid #9400D3;
+            margin: 5px;
+        }
+        .team_content{
+            padding: 50px;
+        }
+        .team_questions{
+            background-color: white;
+        }
+            
+            label[for="toggle"] {
+  z-index: 1;
+  cursor: pointer;
+  padding: 10px;
+       
+}
+ label[for="toggleFilter"] {
+  z-index: 1;
+  cursor: pointer;
+  padding: 10px;
+       
+}
+#toggle {
+  display: none;
+}
+ #toggleFilter {
+  display: none;
+}
+
+.sliding-panel {
+  display: flex;
+}
+
+.return-arrow {
+  width: 20px;
+}
+
+.help-text {
+  padding: 35px 15px 10px;
+}
+
+aside {
+  
+  margin-top: 150px;
+  width: 240px;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  height: 80vh;
+  right: -130px;
+  position: absolute;
+  background-color: aliceblue;    
+  transition: 0.6s all;
+}
+
+#toggle:checked + aside {
+  right: 0px;
+}
+#toggleFilter:checked + aside {
+  right: 0px;
+}        
+     </style>
+    {% endblock %}
 {% block app_content %}
  <!--start slider section-->
-        <section id="hero" class="hero-content hero-slider-section-one" style="height: 100px;">
+        <section id="hero" class="hero-content hero-slider-section-one" style="height: 80px;">
                 <div class="container">
                                     <div class="container">
                     <div class="row">
@@ -33,32 +116,87 @@
                 </div>
             </div>
         </section>
-        <!--end slider section-->
-
-        <!--start customers section-->
-        <div class="customers-section pt-40">
-            <div class="customers-wrap">
+   <section class="promo-section" style="padding-top: 3%;">
+            <div class="promo-section-wrap">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-6 col-sm-4">
-               
+                        <div class="col-lg-9 " style="height: 80vh;padding-right: 2%;">
+                            <table class="table">
+                                <thead class="text-primary team_questions">
+                                    <tr>
+                                        <td>Question</td>
+                                        <td>Base Points</td>
+                                        <td>Gain Points</td>
+                                        <td>Status</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for question in team.team_questions.all %}
+                                    <tr>
+                                        <td>{{question.question.id}}</td>
+                                        <td>{{question.base_points}}</td>
+                                        <td>{{question.gain_points}}</td>
+                                        {% if question.is_completed %}
+                                            <td class="text-success">Completed</td>
+                                        {% else %}
+                                            <td class="text-warning">Process</td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endfor%}
+                                </tbody>
+                            </table>                            
                         </div>
-                        <div class="col-md-6 col-sm-8">
-                            <div class="customers-content">
-                                <div class="owl-carousel owl-theme customers-slider">
-                                   
+                        <div class="col-lg-3 fixed" style="padding: 0px;">
+                            <div class="card team_card">
+                                <h6 class="card-title team_text">Team Members</h6>
+                                <div class="row">
+                                    {% for member in team.team_members.all %}
+                                        <div class="col-lg-6">
+                                            <p class="team_member">{{member.member.full_name}}</p><br>
+                                        </div>     
+                                    {% endfor %}                               
                                 </div>
                             </div>
+                            <div class="card team_card">
+                                <h6 class="card-title team_text">Team Points</h6>                                
+                                    <p class="team_member team_content">{{total_points}}</p><br>
+                            </div>
+                            <div class="card team_card">
+                                <h6 class="card-title team_text">Team Questions</h6>
+                                    <p class="team_content team_member">{{solved_questions}}</p><br>
+                            </div><hr/>
+                            <div class="">                                
+                                    <button class="e-btn fullwidth outlined rounded purple">Add Member</button>
+                            </div> 
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--end customers section-->
-        <section class="product-counter-section ptb-50">
+        </section>         
+        <!--end slider section-->
+
+<!--         <section class="product-counter-section ptb-50">
             <div class="product-counter-wrap">
                 <div class="container">
                     <div class="row">
+                        <div id="demo" class="collapse">
+                            <form method="post" accept="{{form_action_url}}">
+                                    <div class="col-lg-3">                                
+                                            {% csrf_token %}
+                                            {{form|crispy}}                                        
+                                    </div>                            
+                                
+                                     <div class="col-lg-3">
+                                        <button type="submit" class="e-btn purple outlined rounded">Add</button>
+                                    </div>
+                        </form>
+                        </div>
+                        <div class="col-lg-3">
+                                <button data-toggle="collapse" data-target="#demo">Collapsible</button>                            
+                        </div>
+                    </div>
+                    <div class="row">
+
                         <div class="col-md-5 col-sm-6">
                             <div class="counter-content-wrap">
                                 <span class="ti-cup"></span>
@@ -82,10 +220,10 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <!--start promo section-->
-        <section class="promo-section ptb-90">
+<!--         <section class="promo-section ptb-90">
             <div class="promo-section-wrap">
                 <div class="container">
                     <div class="row">
@@ -118,6 +256,6 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
         <!--end promo section-->
 {% endblock %}

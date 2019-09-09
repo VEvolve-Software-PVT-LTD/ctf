@@ -33,6 +33,16 @@ urlpatterns = [
         views.team_register,
         name='team_register_view'
     ),
+    url(
+        r'^registration_closed',
+        views.registration_closed,
+        name='registration_closed_view',
+    ),
+    url(
+        r'^add_team_member',
+        views.add_team_member,
+        name='add_team_member',
+    ),
     url(r'^$', views.landing_page, name='landing_page'),
     
 ]

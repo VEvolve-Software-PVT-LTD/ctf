@@ -1,4 +1,30 @@
 {% extends 'base.html' %}
+{% load static %}
+    {% block extra_code %}
+     <link href="{% static 'assets/css/efrolic.min.css' %}" rel="stylesheet">      
+     <style type="text/css">
+            input{
+                    border:2px solid #FF0000;
+            }
+        .team_member{
+            text-align: center;
+        }            
+        .question_text{
+            font-size: 15px;
+        }
+        .quesiton_block{
+            height: 25vh;
+        }
+        .widthclass{
+            margin-top: 0px;
+            padding-top:0px;
+        }
+        .widthclass_main{
+            margin-top: 1%;
+            padding-top:0px;            
+        }
+     </style>
+    {% endblock %}
 {% block app_content %}
  <!--start slider section-->
         <section id="hero" class="hero-content hero-slider-section-one" style="height: 90px;">
@@ -22,7 +48,7 @@
                             <div class="counter-content-wrap">
                                 <span class="ti-cup"></span>
                                 <h6 class="counter-title"><strong>{{question.id}}</strong></h6>
-                                <p>Question</p>
+                                <p>Flag</p>
                             </div>
                         </div>
                         <div class="col-md-7 col-sm-6">
@@ -46,7 +72,7 @@
                 </div>
             </div>
         </section>
-       <section class="testimonial-section bg-secondary ptb-90">
+       <section class="testimonial-section ptb-90 widthclass_main">
             <div class="testimonial-wrap">
                 <div class="container">
                             {% if messages %}
@@ -59,30 +85,38 @@
                                 {% endfor %}
                             </div>
                             {% endif %}
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="owl-carousel owl-theme testimonial-slider">
-                                <div class="item">
-                                    <div class="single-testimonial-item">
-                                        <span class="blockquote-icon"><i class="fa fa-quote-left"></i></span>
-                                        <div class="testimonial-content">
-                                            <h5 class="text-justify">{{question.question_text|linebreaks}}</h5>
-                                        </div>
-                                        {% for clue in taken_clues%}
-                                        <div class="alert alert-primary" role="alert">
-                                            clue:<span class="text-primary"> {{ clue.clue_text}}</span><br>
-                                            clue points: <span class="text-primary">{{clue.clue_points}} </span>
-                                        </div>
-                                        {% endfor%}
-                                    </div>
+                    </div>
+                </div>
+                <div class="container widthclass">
+                    <div class="row widthclass">
+                        <div class="col-lg-8 quesiton_block">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-body question_text">Question: {{question.question_text|linebreaks}}</h6>
+                                    {% if team_question.is_completed %}
+                                    {% else %}
+                                        {% if clue_exist %}
+                                        <a class="e-btn plane inverted success">
+                                                    Clue Points: {{clue.clue_points}}
+                                        </a>
+                                        <a class="e-btn plane inverted primary" href="{% url 'question_clue' question.id %}">
+                                                    Get Clue
+                                        </a>                                        
+                                        {% else %}
+                                         <a class="e-btn plane inverted danger">
+                                                    No Clue
+                                        </a>
+                                        {% endif %}
+                                    {% endif %}                                    
                                 </div>
-                                <div class="item">
-                                    <div class="single-testimonial-item">
-                                        <span class="blockquote-icon"><i class="fa fa-quote-left"></i></span>
-                                        <div class="testimonial-content">
+                            </div>
+                        </div>
+                        <div class="col-lg-4 e-box widthclass">
+                            <div class="card">
+                                <div class="card-body">
                                             {% if team_question.is_completed %}
                                                 <span class="ti-cup fa-3x text-success counter" style="margin-left:200px;"></span>
-                                                    <h5 class="text-success">Congratulations ! You Already Solved it</h5>                                             
+                                                    <h5 class="text-success">Congratulations ! You Already Find it</h5>                                             
                                             {% else %}
                                             <form method="post">
                                                     {% csrf_token %}
@@ -90,10 +124,10 @@
                                                         <label for="id_answer">{{form.answer.label_tag}}</label>
                                                         <input 
                                                                type="text" 
-                                                               class="form-control {% if form.answer.errors %} is-invalid {% endif %}"
+                                                               class="form-control {% if form.answer.errors %} is-invalid {% endif %} text-primary"
                                                                id="id_answer"
                                                                name="answer"
-                                                               placeholder="Enter answer"
+                                                               placeholder="Enter key Here"
                                                                value="{{form.answer.value|default:''}}"
                                                                />
                                                         {% if form.answer.errors %}
@@ -103,11 +137,9 @@
                                                         {% endif %}
 
                                                     </div>
-                                                    <button class="btn btn-block softo-solid-btn" type="submit" style="margin: 5%;">Submit</button>
+                                                    <button class="e-btn rounded outlined purple fullwidth" type="submit" style="margin: 5%;">Submit</button>
                                                 </form>                                                
-                                            {% endif %}
-                                        </div>
-                                    </div>
+                                            {% endif %}                                    
                                 </div>
                             </div>
                         </div>
@@ -116,16 +148,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-6">
-                            {% if team_question.is_completed %}
-                            {% else %}
-                                {% if clue_exist %}
-                                    <p>If you are ready to looe {{clue.clue_points}} Points</p>
-                                    <a href="{% url 'question_clue' question.id %}">Get Clue</a>
                             
-                                {% else %}
-                                    Sorry No More  Clues
-                                {% endif %}
-                            {% endif %}
                         </div>
                     </div>
                 </div>                

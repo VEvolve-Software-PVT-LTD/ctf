@@ -70,12 +70,12 @@ class Team(TimeStamp):
         User, 
         on_delete=models.CASCADE
     )
-    last_spoken_to = models.ForeignKey(
-        User,
-        null=True,
-        related_name='help_chats',
-        on_delete=models.SET_NULL,
-    )
+    # last_spoken_to = models.ForeignKey(
+    #     User,
+    #     null=True,
+    #     related_name='help_chats',
+    #     on_delete=models.SET_NULL,
+    # )
     objects = TeamManager()
     
     def __str__(self):
@@ -135,6 +135,7 @@ class Question(TimeStamp):
         _("Question Has Clue"),
         default=True
     )
+    
     
     def __str__(self):
         return self.question_text

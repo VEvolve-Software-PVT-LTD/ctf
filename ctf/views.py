@@ -158,42 +158,6 @@ def get_questions_list(request):
             instance_question['points'] = question.question_points
             question_bank.append(instance_question)
             instance_question = {}
-
-    print(question_bank)
-    # question_bank = []
-    # tq_questions = []
-    # team_questions =  list(models.TeamQuestion.objects.filter(team=request.user.team))
-    # for question in questions:
-    #     question_bank.append(question.id)
-    # for tq in team_questions:
-    #     tq_questions.append(tq.question.id)
-    # print(tq_questions)
-    # un_opened_questions = set(question_bank)-set(tq_questions)
-    # team_questions_unopened = list(models.Question.objects.filter(id__in=un_opened_questions))
-    # total_questions = team_questions_unopened+ team_questions
-    # print(total_questions)    
-
-    # final_questions = []
-    # question_instance = {}
-    # print("total questions\n\n\n")
-    # for i in total_questions:
-    #     print(i)
-    #     print(i.id)
-    # for question in questions:
-    #     for tq in team_questions:
-    #         if tq.id 
-    #         if question.id == tq.question.id:
-    #             question_instance['id'] = question.id
-    #             question_instance['status'] = tq.is_completed 
-    #             question_bank.append(question_instance)
-    #             question_instance = {}
-    #         else:
-    #             question_instance['id'] = question.id
-    #             question_instance['status'] = 'Not Opened'
-    #             question_bank.append(question_instance)
-    #             question_instance = {}
-    # print(question_bank)
-    # print(list(unopened_questions))    
     return render(request, 
                   'questions_list.html', 
                   {'questions': question_bank}
@@ -366,15 +330,37 @@ class TeamDashBoard(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['solved_questions'] = models.TeamQuestion.objects.filter(
+        context['solved_questions_number'] = models.TeamQuestion.objects.filter(
             team=self.request.user.team, 
             is_completed=True).count()
         team_points = models.TeamQuestion.objects.filter(
             team=self.request.user.team, 
             is_completed=True).aggregate(Sum('gain_points'))
         context['total_points'] = team_points['gain_points__sum']
+        team_questions =  models.TeamQuestion.objects.filter(
+            team=self.request.user.team
+        )
+        # print(team_questions)
+        questions = []
+        question ={}
+        for q in team_questions:
+            question['id'] = q.question.id
+            question['gain_points'] = q.gain_points
+            question['base_points'] = q.base_points
+            if q.is_completed:
+                question['remark'] = 'Congratulations'
+                questions['status'] = 'Completed'
+                questions.append(question)
+                question = {}
+            else:
+                question['remark'] = 'Try Some Clue'
+                question['status'] = 'In Process'
+                questions.append(question)
+                question = {}
+        context['solved_questions'] = questions
         context['form'] = MemberForm
-        context['form_action_url'] = reverse_lazy('add_team_member')
+        # 
+        # context['form_action_url'] = reverse_lazy('add_team_member')
         return context
 
     
@@ -401,10 +387,16 @@ import json
 def _send_worker():
     while True:
         total_page = 'hi'
-        # question_action = r.get('question_action').decode('utf-8')
-        # print(question_action)
-        # answer_action = r.get('answer_action').decode('utf-8')
-        # print(answer_action)
+        # if r.exists('question_action'):
+        #     question_action = r.get('question_action').decode('utf-8')
+        # else:
+        #     question_action = 'No Action'
+
+        # if r.exists('answer_action'):        
+        #     answer_action = r.get('answer_action').decode('utf-8')
+        # # print(answer_action)
+        # else:
+        #     answer_action = 'No Action'
         # scores = models.TeamQuestion.objects.filter(is_completed=True)
         # print(scores)
         # team_scores = list(scores.values('team__team_name').annotate(count=Sum('gain_points')).order_by('-count'))
@@ -463,7 +455,7 @@ def _send_worker():
         # print("b")
         # print("hello")
         # total_page = _html_data + _second_section
-        send_event('time', 'message',total_page)
+        # send_event('time', 'message',total_page)
         time.sleep(1)
     
 
@@ -483,7 +475,7 @@ if _db_ready():
     threds = []
     send_thread = threading.Thread(target=_send_worker)
     send_thread.daemon = True
-    send_thread.start()
+    # send_thread.start()
     
     
 # note : we are ot using below view.

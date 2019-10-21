@@ -258,7 +258,7 @@ jQuery(function ($) {
     });
 
     //  8. ytplayer for hero background video
-    $(".player").mb_YTPlayer();
+    // $(".player").mb_YTPlayer();
 
     //  9. typed
     var typed = $(".typed");

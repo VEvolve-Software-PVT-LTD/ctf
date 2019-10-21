@@ -29,28 +29,29 @@ INSTALLED_APPS = [
     'ctf',
     
 ]
-from django_eventstream.utils import have_channels
-if have_channels():
-    INSTALLED_APPS.append('channels')
+#from django_eventstream.utils import have_channels
+#if have_channels():
+#    INSTALLED_APPS.append('channels')
 INSTALLED_APPS.extend([
-    'django_eventstream',
+#    'django_eventstream',
     'crispy_forms',
 ])
 
-ASGI_APPLICATION = "gectf.routing.application"
+ASGI_APPLICATION = "ctfproject.routing.application"
+
 
 GRIP_URL = os.environ.get('GRIP_URL')
 
-EVENTSTREAM_STORAGE_CLASS = 'django_eventstream.storage.DjangoModelStorage'
-CHANNEL_LAYERS = {
+#EVENTSTREAM_STORAGE_CLASS = 'django_eventstream.storage.DjangoModelStorage'
+#CHANNEL_LAYERS = {
     
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
+#    'default': {
+#        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#        'CONFIG': {
+#            "hosts": [('127.0.0.1', 6379)],
+#        },
+#    },
+#}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -61,7 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'gectf.urls'
+ROOT_URLCONF = 'ctfproject.urls'
 
 TEMPLATES = [
     {
@@ -79,14 +80,32 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'gectf.wsgi.application'
+WSGI_APPLICATION = 'ctfproject.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 DATABASES = {}
 import dj_database_url
-DATABASES['default'] = dj_database_url.config(default='sqlite:///db.sqlite3')
+# DATABASES['default'] = dj_database_url.config(default='sqlite:///db.sqlite3')
+DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ctfproject',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
+}
+
+# DATABASES['default'] = {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'ctf',
+#         'USER': 'root',
+#         'PASSWORD': 'root',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+# }
+
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -111,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -124,10 +143,8 @@ LOGOUT_REDIRECT_URL = '/login/'
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATIC_ROOT=os.path.join(BASE_DIR, 'assets')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 CACHE_TTL = 60 * 15

@@ -3,6 +3,8 @@ from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
 from ctf import views
 
+# 139.162.70.213 root@vevoelve
+
 urlpatterns = [
     
     
@@ -11,10 +13,12 @@ urlpatterns = [
     url(r'^team_dashboard/(?P<pk>[0-9]+)/profile$', views.TeamDashBoard.as_view(), name='team_dash_board'),
     url(r'^answer_question/$',views.answer_question, name='answer_question'),
     url(r'^questions/$', views.get_questions_list, name='questions_list'),
-    url(r'^team_rankings/$', views.team_rankings, name='team_rankings'),
+    url(r'^team_rankings/$', views.admin_dashboard, name='team_rankings'),
     url(r'^permission_denied/$', views.permission_denied, name='permission_denied'),
-    url(r'^customer-service/(?P<pk>[0-9]+)/$', views.room, name='cs_chat'),
-    url(r'^customer-service/', TemplateView.as_view(template_name='customer_service.html'), name='cs_main'),
+    
+    # url(r'^customer-service/(?P<pk>[0-9]+)/$', views.room, name='cs_chat'),    
+    # url(r'^customer-service/', TemplateView.as_view(template_name='customer_service.html'), name='cs_main'),
+
     url(
         r'^login/$', 
         auth_views.LoginView.as_view(), 

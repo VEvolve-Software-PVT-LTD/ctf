@@ -3,6 +3,8 @@
 {% load crispy_forms_tags %}
     {% block extra_code %}
      <link href="{% static 'assets/css/efrolic.min.css' %}" rel="stylesheet">      
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
      <style type="text/css">
         .team_member{
             text-align: center;
@@ -152,7 +154,7 @@ aside {
                                 <div class="row">
                                     {% for member in team.team_members.all %}
                                         <div class="col-lg-6">
-                                            <p class="team_member">{{member.member.full_name}}</p><br>
+                                            <p class="team_member"><i class="fa-user-o"></i>{{member.member.full_name}}</p><br>
                                         </div>     
                                     {% endfor %}                               
                                 </div>
@@ -163,11 +165,11 @@ aside {
                             </div>
                             <div class="card team_card">
                                 <h6 class="card-title team_text">Team Questions</h6>
-                                    <p class="team_content team_member">{{solved_questions}}</p><br>
+                                    <p class="team_content team_member">{{solved_questions_number}}</p><br>
                             </div><hr/>
-                            <div class="">                                
+                            <!-- <div class="">                                
                                     <button class="e-btn fullwidth outlined rounded purple">Add Member</button>
-                            </div> 
+                            </div>  -->
                         </div>
                     </div>
                 </div>

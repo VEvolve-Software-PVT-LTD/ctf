@@ -23,7 +23,7 @@
     <!-- responsive css -->
     <link href="{% static 'assets/css/responsive.css' %}" rel="stylesheet">
     <script src="{% static 'assets/js/vendor/modernizr-2.8.1.min.js' %}"></script>
-    
+
     <!-- HTML5 Shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -64,9 +64,6 @@
 </head>
 <body>
 <!-- Preloader -->
-<div id="preloader">
-    <div id="loader"></div>
-</div>
 <!--end preloader-->
 <div id="main" class="main-content-wraper">
     <div class="main-content-inner">
@@ -77,8 +74,8 @@
                 <div class="container">
                     <div class="row">
                         <div class="navbar-header page-scroll">
-                            <button type="button" 
-                                    class="navbar-toggle collapsed" 
+                            <button type="button"
+                                    class="navbar-toggle collapsed"
                                     data-toggle="collapse"
                                     data-target="#myNavbar">
                                 <span class="sr-only">Toggle navigation</span>
@@ -86,8 +83,8 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a 
-                               class="navbar-brand page-scroll" 
+                            <a
+                               class="navbar-brand page-scroll"
                                href="{% url 'landing_page' %}">
                                     <h5 style="color:white;">CAPTURE THE FLAG </h5>
                             </a>
@@ -97,13 +94,13 @@
                         <div class="navbar-collapse collapse" id="myNavbar">
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="">
-                                    <a 
-                                       class="page-scroll" 
+                                    <a
+                                       class="page-scroll"
                                        href="{% url 'landing_page' %}">
                                         Home
                                     </a>
-                                </li>           
-                                {% if request.user.is_authenticated %}  
+                                </li>
+                                {% if request.user.is_authenticated %}
                                         {% if request.user.is_superuser %}
                                         <li class="">
                                              <a class="page-scroll" href="{% url 'team_rankings' %}">Team Ranks</a>
@@ -111,13 +108,13 @@
                                         {% else %}
                                          <li class="">
                                              <a class="page-scroll" href="{% url 'team_dash_board' request.user.team.id%}">Score Board</a>
-                                        </li> 
+                                        </li>
                                         <li class="">
-                                            <a 
-                                               class="page-scroll" 
+                                            <a
+                                               class="page-scroll"
                                                href="{% url 'questions_list' %}">Questions
                                             </a>
-                                        </li>                                
+                                        </li>
                                         {% endif %}
                                 <li class=""><a class="page-scroll" href="{% url 'logout_view' %}">Logout</a></li>
                                 {% else %}

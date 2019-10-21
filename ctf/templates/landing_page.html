@@ -1,5 +1,192 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block extra_code %}
+<style>
+    .instruction_text{
+      text-align: justify;
+    }
+    .instruction_image{
+      padding: 40px;
+
+    }
+    .instruction_quote{
+      font-family: 'Rajdhani', sans-serif;
+      color: purple;
+      color: red;
+      text-align: justify;
+    }
+.insrtuction_section {
+  margin: 23px;
+  font-family: "Trebuchet MS", sans-serif;
+  font-size: 15.5px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container-instruction {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 200px));
+  grid-auto-rows: 200px;
+  grid-auto-flow: row dense;
+  grid-gap: 23px;
+  justify-content: center;
+}
+
+.card-top, .card-right, .card-bottom, .card-left {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100%;
+  width: 100%;
+  border-radius: 95.2380952381px;
+  box-shadow: 0px 3px 9px 1px rgba(0, 10, 20, 0.2);
+}
+
+.card-top {
+  flex-direction: column;
+  grid-column: auto / span 1;
+  grid-row: auto / span 2;
+}
+
+.card-right {
+  flex-direction: row-reverse;
+  grid-column: auto / span 2;
+  grid-row: auto / span 1;
+}
+
+.card-bottom {
+  flex-direction: column-reverse;
+  grid-column: auto / span 1;
+  grid-row: auto / span 2;
+}
+
+.card-left {
+  flex-direction: row;
+  grid-column: auto / span 2;
+  grid-row: auto / span 1;
+}
+
+.card-image {
+  display: flex;
+}
+
+.card-top .card-image, .card-bottom .card-image {
+  height: 50%;
+  width: 100%;
+}
+
+.card-left .card-image, .card-right .card-image {
+  height: 100%;
+  width: 50%;
+}
+
+.card-image img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.card-top img {
+  border-radius: 95.2380952381px 95.2380952381px 0 0;
+}
+
+.card-right img {
+  border-radius: 0 95.2380952381px 95.2380952381px 0;
+}
+
+.card-bottom img {
+  border-radius: 0 0 95.2380952381px 95.2380952381px;
+}
+
+.card-left img {
+  border-radius: 95.2380952381px 0 0 95.2380952381px;
+}
+
+.card-text {
+  align-self: center;
+  padding: 23px;
+}
+
+.card-top .card-text {
+  height: auto;
+  width: auto;
+  padding-bottom: 36.8px;
+}
+
+.card-right .card-text {
+  height: auto;
+  width: 50%;
+  padding-left: 36.8px;
+}
+
+.card-bottom .card-text {
+  height: auto;
+  width: auto;
+  padding-top: 36.8px;
+}
+
+.card-left .card-text {
+  height: auto;
+  width: 50%;
+  padding-right: 36.8px;
+}
+
+.card-text p {
+  margin: 0;
+  line-height: 1.35em;
+  color: #334455;
+}
+
+@media (max-width: 500px) {
+  .card-top {
+    flex-direction: row;
+    grid-column: auto / span 2;
+    grid-row: auto / span 1;
+  }
+
+  .card-bottom {
+    flex-direction: row-reverse;
+    grid-column: auto / span 2;
+    grid-row: auto / span 1;
+  }
+
+  .card-top .card-image, .card-bottom .card-image {
+    height: 100%;
+    width: 50%;
+  }
+
+  .card-top img {
+    border-radius: 95.2380952381px 0 0 95.2380952381px;
+  }
+
+  .card-bottom img {
+    border-radius: 0 95.2380952381px 95.2380952381px 0;
+  }
+
+  .card-top .card-text {
+    height: auto;
+    width: 50%;
+    padding-right: 36.8px;
+  }
+
+  .card-bottom .card-text {
+    height: auto;
+    width: 50%;
+    padding-left: 36.8px;
+  }
+}
+@media (max-width: 400px) {
+  .card-image {
+    width: 38% !important;
+  }
+
+  .card-text {
+    width: 62% !important;
+  }
+}
+</style>
+{% endblock %}
 {% block app_content %}
  <!--start slider section-->
         <section id="hero" class="hero-content hero-slider-section-one section-lg" style="height: 200px;">
@@ -18,7 +205,7 @@
                                     {% else %}
                                         <div class="slider-action-btn">
                                             <a href="{% url 'login_view' %}" class="btn softo-solid-btn"><i class="fa fa-lock"></i>Login</a>
-                                        </div>                                    
+                                        </div>
                                     {% endif %}
                                 </div>
                             </div>
@@ -46,7 +233,7 @@
                         <div class="col-md-6 col-sm-8">
                             <div class="customers-content">
                                 <div class="owl-carousel owl-theme customers-slider">
-                                   
+
                                 </div>
                             </div>
                         </div>
@@ -56,7 +243,7 @@
         </div>
 
         <!--start insrtuction section-->
-        <section class="promo-section ptb-90">
+        <!--<section class="promo-section ptb-90">
             <div class="promo-section-wrap">
                 <div class="container">
                     <div class="row">
@@ -103,5 +290,75 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section>-->
+<br><br><br>
+<div class="instruction_section">
+<div class='container-instruction'>
+  <div class='card-left'>
+    <div class='card-image'>
+      <img src='{% static 'assets/img/computer.svg' %}' class="instruction_image">
+    </div>
+    <div class='card-text'>
+      <p class="instruction_text">Make sure you have good LAN connection Before starting or in the middle of contest and during contest.</p>
+    </div>
+  </div>
+  <div class='card-top' style="height: 100vh;">
+    <div class='card-image'>
+      <img src='{% static 'assets/img/developer_2x.jpg' %}' class="instruction_image">
+    </div>
+    <div class='card-text'>
+      <p class="instruction_quote">Behind every successful Coder there an even more successful De-coder to understand that code.<hr><br><br></p><p class="instruction_quote" style="text-align: center;">All The Best</p>
+    </div>
+  </div>
+  <div class='card-right'>
+    <div class='card-image'>
+      <img src='{% static 'assets/img/trophy.png'%}' class="instruction_image">
+    </div>
+    <div class='card-text'>
+      <p class="instruction_text">Winners will be declared based on Points and Time taken to find the flags.</p>
+    </div>
+  </div>
+  <div class='card-right'>
+    <div class='card-image'>
+      <img src='{% static 'assets/img/baby.svg' %}' class="instruction_image">
+    </div>
+    <div class='card-text'>
+      <p class="instruction_text">Team Can Start at any time of contest in event time intervel.</p>
+    </div>
+  </div>
+  <div class='card-top'>
+    <div class='card-image'>
+      <img src='{% static 'assets/img/support.svg' %}' class="instruction_image">
+    </div>
+    <div class='card-text'>
+      <p class="instruction_text">Team can also utilize help service from VEvolve for doubts & clarifications.</p>
+    </div>
+  </div>
+  <div class='card-bottom'>
+    <div class='card-image'>
+      <img src='{% static 'assets/img/images.png' %}' class="instruction_image">
+    </div>
+    <div class='card-text'>
+      <p>VM IP Address will change sometimes please find the VM IP on flags top.</p>
+    </div>
+  </div>
+  <div class='card-left'>
+    <div class='card-image'>
+      <img src='{% static 'assets/img/_____-01_2x.png' %}' class="instruction_image">
+    </div>
+    <div class='card-text'>
+      <p>Team Can Find Any random flag without any restrictions or linked flags.</p>
+    </div>
+  </div>
+
+</div>
+</div>
+<br><br>
+<div class="container">
+   <div class="row">
+      <div class="col-lg-12 text-center">
+             VEvolve Software
+       </div>
+    </div>
+</div>
 {% endblock %}

@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gectf.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ctfproject.settings")
 
 application = get_wsgi_application()

@@ -13,7 +13,7 @@ class AnswerForm(forms.Form):
     def clean(self):
         """ clean team submitted answer """
         super().clean()
-        strip_tags(self.cleaned_data['answer'])
+        strip_tags(self.cleaned_data.get('answer'))
         return self.cleaned_data
    
 

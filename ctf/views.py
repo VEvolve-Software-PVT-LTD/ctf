@@ -29,8 +29,8 @@ from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.db.models import Sum
-from django_eventstream import get_current_event_id, send_event
-from django_eventstream.channelmanager import DefaultChannelManager
+# from django_eventstream import get_current_event_id, send_event
+# from django_eventstream.channelmanager import DefaultChannelManager
 # import datetime
 #from kafka import KafkaConsumer
 #from kafka import KafkaProducer
@@ -52,8 +52,8 @@ CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 def user_check(user):
     """ check user is team or admin."""
     return hasattr(user, 'team')
-    
-    
+
+
 def super_user_check(user):
     return user.is_superuser
 
@@ -85,7 +85,7 @@ def room(request, pk):
     )
 
 def landing_page(request):
-    """ 
+    """
     Landing page view caching 6 hours.
     To increase Cache time change the 360.
     """
@@ -93,7 +93,7 @@ def landing_page(request):
 
 
 @login_required(login_url=reverse_lazy('login_view'))
-@user_passes_test(super_user_check, 
+@user_passes_test(super_user_check,
                   login_url=reverse_lazy('permission_denied'))
 def get_teams(request):
     """
@@ -111,7 +111,7 @@ def get_teams(request):
 
 
 @login_required(login_url=reverse_lazy('login_view'))
-@user_passes_test(user_check, 
+@user_passes_test(user_check,
                   login_url=reverse_lazy('permission_denied'))
 def get_questions_list(request):
     """ returns questions list."""
@@ -136,7 +136,7 @@ def get_questions_list(request):
     for i in questions:
         total_qids.append(i.id)
     print(total_qids)
-    
+
     for i in team_open_questions:
         top_ids.append(i.question.id)
     print(top_ids)
@@ -158,50 +158,14 @@ def get_questions_list(request):
             instance_question['points'] = question.question_points
             question_bank.append(instance_question)
             instance_question = {}
-
-    print(question_bank)
-    # question_bank = []
-    # tq_questions = []
-    # team_questions =  list(models.TeamQuestion.objects.filter(team=request.user.team))
-    # for question in questions:
-    #     question_bank.append(question.id)
-    # for tq in team_questions:
-    #     tq_questions.append(tq.question.id)
-    # print(tq_questions)
-    # un_opened_questions = set(question_bank)-set(tq_questions)
-    # team_questions_unopened = list(models.Question.objects.filter(id__in=un_opened_questions))
-    # total_questions = team_questions_unopened+ team_questions
-    # print(total_questions)    
-
-    # final_questions = []
-    # question_instance = {}
-    # print("total questions\n\n\n")
-    # for i in total_questions:
-    #     print(i)
-    #     print(i.id)
-    # for question in questions:
-    #     for tq in team_questions:
-    #         if tq.id 
-    #         if question.id == tq.question.id:
-    #             question_instance['id'] = question.id
-    #             question_instance['status'] = tq.is_completed 
-    #             question_bank.append(question_instance)
-    #             question_instance = {}
-    #         else:
-    #             question_instance['id'] = question.id
-    #             question_instance['status'] = 'Not Opened'
-    #             question_bank.append(question_instance)
-    #             question_instance = {}
-    # print(question_bank)
-    # print(list(unopened_questions))    
-    return render(request, 
-                  'questions_list.html', 
+    return render(request,
+                  'questions_list.html',
                   {'questions': question_bank}
                  )
 
 
 @login_required(login_url=reverse_lazy('login_view'))
-@user_passes_test(user_check, 
+@user_passes_test(user_check,
                   login_url=reverse_lazy('permission_denied'))
 def get_question_detail(request,pk):
     """ Question Detail View function."""
@@ -211,18 +175,18 @@ def get_question_detail(request,pk):
         context['question'] = question
     except models.Question.DoesNotExist:
         pass
-    
+
     if request.method == 'POST':
         form = AnswerForm(request.POST)
         if form.is_valid():
             if request.POST['answer'] == question.answer.answer:
                 team_question = models.TeamQuestion.objects.get(
-                    question=question, 
+                    question=question,
                     team=request.user.team
                 )
                 team_question.ended_at = datetime.now()
                 team_question.is_completed = True
-                team_question.save()                
+                team_question.save()
                 # redirects to questions list on success.
                 data = "{} Answered  Question Number {}".format(str(request.user.team), str(team_question.question.id))
                 r.set('answer_action', data)
@@ -233,17 +197,17 @@ def get_question_detail(request,pk):
             messages.warning(request, _("Sorry wrong attempt"))
         # redirects to question detail page on wrong attempt.
         return redirect('question_detail', pk=question.pk)
-    
+
     if request.method == 'GET':
         user_key = '{}-key'.format(request.user.team)
         current_action = "Standing in Question Number{}".format(question.id)
         r.set(user_key, current_action)
         tq = models.TeamQuestion.objects.filter(
-            question=question, 
+            question=question,
             team=request.user.team).exists()
         if tq:
             team_question = models.TeamQuestion.objects.get(
-                question=question, 
+                question=question,
                 team=request.user.team
             )
             context['team_question'] = team_question
@@ -260,7 +224,8 @@ def get_question_detail(request,pk):
             context['team_question'] = team_question
             data = "{} opened First time Question Number {}".format(str(request.user.team), str(question.id))
             r.set('question_action', data)
-            
+
+        context['clue_added'] = True
         if question.question_has_clue:
             clues_count = models.Clue.objects.filter(question=question).count()
             print(clues_count)
@@ -279,6 +244,7 @@ def get_question_detail(request,pk):
                 context['taken_clues'] = taken_clues
         else:
             clue = _("Sorry No Clue for this Question")
+            context['clue_added'] = False
         form = AnswerForm()
         context['form'] = form
         return render(request, 'question_detail.html',context)
@@ -286,7 +252,7 @@ def get_question_detail(request,pk):
 
 
 @login_required(login_url=reverse_lazy('login_view'))
-@user_passes_test(user_check, 
+@user_passes_test(user_check,
                   login_url=reverse_lazy('permission_denied'))
 @never_cache
 def get_clue(request, pk):
@@ -297,7 +263,7 @@ def get_clue(request, pk):
     current_action = "Taking Clue For Question Number{}".format(question_instance.id)
     r.set(user_key, current_action)
     team_question = models.TeamQuestion.objects.get(
-        question=question_instance, 
+        question=question_instance,
         team=request.user.team
     )
     clue = models.Clue.objects.filter(
@@ -314,12 +280,12 @@ def get_clue(request, pk):
 
 # note : we are not using it.
 @login_required(login_url=reverse_lazy('login_view'))
-@user_passes_test(user_check, 
+@user_passes_test(user_check,
                   login_url=reverse_lazy('permission_denied'))
 def team_dash_board(request):
-    """ 
+    """
     Team dash board view
-    displays total attempted questions with points.   
+    displays total attempted questions with points.
     """
     team = models.Team.objects.all_with_prefetch_details(user=request.user)
     return render(request, 'team_dash_board.html', {'team': team})
@@ -329,11 +295,11 @@ class TeamDashBoard(DetailView):
     """
     Team dash board view
     displays total attempted questions with points.
-    """    
+    """
     template_name = 'team_score_board.html'
     model = models.Team
     context_object_name = 'team'
-    
+
     def dispatch(self, request, *args, **kwargs):
         """ allowing to access only requested team."""
         team =self.request.user.team
@@ -345,13 +311,13 @@ class TeamDashBoard(DetailView):
         current_action = "Watching Score Board"
         r.set(user_key, current_action)
         return super(TeamDashBoard, self).dispatch(request, *args, **kwargs)
-        
+
     def get_object(self, queryset=None):
         obj = super(TeamDashBoard, self).get_object(queryset=queryset)
         if obj is None:
             raise Http404("Team Profile is Not Found")
         return obj
-    
+
     def get(self,request,*args, **kwargs):
         try:
             self.object = self.get_object()
@@ -359,40 +325,74 @@ class TeamDashBoard(DetailView):
             raise Http404('Team Profile is not found')
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
-    
+
     def get_queryset(self):
         team_profile = self.model.objects.all_with_prefetch_details()
         return team_profile
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['solved_questions'] = models.TeamQuestion.objects.filter(
-            team=self.request.user.team, 
+        context['solved_questions_number'] = models.TeamQuestion.objects.filter(
+            team=self.request.user.team,
             is_completed=True).count()
         team_points = models.TeamQuestion.objects.filter(
-            team=self.request.user.team, 
+            team=self.request.user.team,
             is_completed=True).aggregate(Sum('gain_points'))
         context['total_points'] = team_points['gain_points__sum']
+        team_questions =  models.TeamQuestion.objects.filter(
+            team=self.request.user.team
+        )
+        # print(team_questions)
+        questions = []
+        question ={}
+        for q in team_questions:
+            question['id'] = q.question.id
+            question['gain_points'] = q.gain_points
+            question['base_points'] = q.base_points
+            if q.is_completed:
+                question['remark'] = 'Congratulations'
+                question['status'] = 'Completed'
+                questions.append(question)
+                question = {}
+            else:
+                question['remark'] = 'Try Some Clue'
+                question['status'] = 'In Process'
+                questions.append(question)
+                question = {}
+        context['solved_questions'] = questions
         context['form'] = MemberForm
-        context['form_action_url'] = reverse_lazy('add_team_member')
+        #
+        # context['form_action_url'] = reverse_lazy('add_team_member')
         return context
 
-    
+
 #@login_required(login_url=reverse_lazy('login_view'))
-#@user_passes_test(super_user_check, 
-#                  login_url=reverse_lazy('permission_denied'))    
+#@user_passes_test(super_user_check,
+#                  login_url=reverse_lazy('permission_denied'))
 def team_rankings(request):
     """
     Total Team Rankings for admin.
     """
     context=  {}
     context['url'] = '/events/'
-    context['last_id'] = get_current_event_id(['time'])
+    # context['last_id'] = get_current_event_id(['time'])
     # context['question_id'] = get_current_event_id(['begin'])
-    return render(request, 
-                  'event.html', 
+    return render(request,
+                  'event.html',
                   context
                  )
+
+@login_required(login_url=reverse_lazy('login_view'))
+@user_passes_test(super_user_check,
+                 login_url=reverse_lazy('permission_denied'))
+def admin_dashboard(request):
+    context = {}
+    scores = models.TeamQuestion.objects.filter(is_completed=True)
+    print(scores)
+    team_scores = list(scores.values('team__team_name').annotate(count=Sum('gain_points')).order_by('-count'))
+    print(team_scores)
+    context['team_scores'] = team_scores
+    return render(request, 'team_scores.html',context)
 
 
 import random
@@ -401,10 +401,16 @@ import json
 def _send_worker():
     while True:
         total_page = 'hi'
-        # question_action = r.get('question_action').decode('utf-8')
-        # print(question_action)
-        # answer_action = r.get('answer_action').decode('utf-8')
-        # print(answer_action)
+        # if r.exists('question_action'):
+        #     question_action = r.get('question_action').decode('utf-8')
+        # else:
+        #     question_action = 'No Action'
+
+        # if r.exists('answer_action'):
+        #     answer_action = r.get('answer_action').decode('utf-8')
+        # # print(answer_action)
+        # else:
+        #     answer_action = 'No Action'
         # scores = models.TeamQuestion.objects.filter(is_completed=True)
         # print(scores)
         # team_scores = list(scores.values('team__team_name').annotate(count=Sum('gain_points')).order_by('-count'))
@@ -425,29 +431,29 @@ def _send_worker():
         # _table_end = '</tr></thead></table></div>'
         # _table_start = _table_start + _table_end
         # _html_data = _html_data+_table_start
-        
+
         # _top_three_data = '<div class="col-lg-4"><div class="card">'
         # _top_three_data = '<div class="col-lg-4"><div class="row">'
         # _top_three_end = '</div></div>'
         # for i in range(3):
         #     inner_data = '<div class="col-lg-12 col-md-12" style="margin-top:2%;"></div>'
-            
+
         #     _top_three_data = _top_three_data + inner_data
-        # _top_three_data = _top_three_data+_top_three_end        
+        # _top_three_data = _top_three_data+_top_three_end
         # _html_data = _html_data + _top_three_data
-        
-        
+
+
         # _actions_data = '<div class="col-lg-4 col-md-4">'
         # _inner_action_data1 = '<div class="e-alert snack sky ePull" style="margin-top:2%;"><h4>{}</h4></div>'.format(question_action)
         # _inner_action_data2 = '<div class="e-alert snack success" style="margin-top:2%;"><h4>{}</h4></div>'.format(answer_action)
         # _actions_end = '</div>'
         # _actions_data = _actions_data+_inner_action_data1+_inner_action_data2+_actions_end
         # _html_data = _html_data + _actions_data
-        
+
         # _second_section = '<div class="container"><div class="row">'
         # for i in range(len(team_scores)):
         #     _team_action_key = team_scores[i]['team__team_name']+'-key'
-        #     if r.exists(_team_action_key):                
+        #     if r.exists(_team_action_key):
         #         _team_action = r.get(_team_action_key).decode('utf-8')
         #     else:
         #         _team_action = 'No Actions Yet.'
@@ -455,40 +461,40 @@ def _send_worker():
         #                         <div class="card-body"><h5 class="card-title text-primary">{}</h5><h6>action: {}</h6>\
         #                         <a class="e-btn purple inverted">Details</a>&emsp;&emsp;&emsp;&emsp;\
         #                         <a class="e-btn danger inverted danger">Points:<span class="text-primary"> {}</span></a></div></div></div>'.format(team_scores[i]['team__team_name'], _team_action, team_scores[i]['count'])
-            
-            
+
+
         #     _second_section = _second_section + _team_data_start
         # _second_section_end = '</div></div>'
         # _second_section = _second_section + _second_section_end
         # print("b")
         # print("hello")
         # total_page = _html_data + _second_section
-        send_event('time', 'message',total_page)
+        # send_event('time', 'message',total_page)
         time.sleep(1)
-    
 
 
-        
-def _db_ready():
-    from django.db import DatabaseError
-    from django_eventstream.models import Event
-    
-    try:
-        Event.objects.count()
-        return True
-    except DatabaseError:
-        return False
 
-if _db_ready():
-    threds = []
-    send_thread = threading.Thread(target=_send_worker)
-    send_thread.daemon = True
-    send_thread.start()
-    
-    
+
+# def _db_ready():
+#     from django.db import DatabaseError
+#     from django_eventstream.models import Event
+
+#     try:
+#         Event.objects.count()
+#         return True
+#     except DatabaseError:
+#         return False
+
+# if _db_ready():
+#     threds = []
+#     send_thread = threading.Thread(target=_send_worker)
+#     send_thread.daemon = True
+    # send_thread.start()
+
+
 # note : we are ot using below view.
 @login_required(login_url=reverse_lazy('login_view'))
-@user_passes_test(user_check, 
+@user_passes_test(user_check,
                   login_url=reverse_lazy('permission_denied'))
 def answer_question(request):
     form = AnswerForm(request.POST)

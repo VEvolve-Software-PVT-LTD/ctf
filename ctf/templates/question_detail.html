@@ -79,7 +79,7 @@
                             <div class="" 
                                  role="alert">
                                 {% for message in messages %}
-                                    <p class="{{message.tags}}">
+                                    <p class=" text-danger {{message.tags}}">
                                         {{message}}
                                     </p>
                                 {% endfor %}
@@ -102,9 +102,10 @@
                                         <a class="e-btn plane inverted primary" href="{% url 'question_clue' question.id %}">
                                                     Get Clue
                                         </a>                                        
-                                        {% else %}
+                                        {% endif %}
+                                        {% if not clue_added %}
                                          <a class="e-btn plane inverted danger">
-                                                    No Clue
+                                                   Sorry ! No Clues Exists
                                         </a>
                                         {% endif %}
                                     {% endif %}                                    
@@ -116,7 +117,7 @@
                                 <div class="card-body">
                                             {% if team_question.is_completed %}
                                                 <span class="ti-cup fa-3x text-success counter" style="margin-left:200px;"></span>
-                                                    <h5 class="text-success">Congratulations ! You Already Find it</h5>                                             
+                                                    <h5 class="text-success">Congratulations ! You Already Found it</h5>                                             
                                             {% else %}
                                             <form method="post">
                                                     {% csrf_token %}
@@ -145,15 +146,20 @@
                         </div>
                     </div>
                 </div>
+                                       
+        </section>
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-6">
-                            
+                        {% for clue in taken_clues %}
+                        <div class="col-lg-12">
+                            <div class="card-body">
+                             Clue:&nbsp; <p class="card-text">{{clue.clue_text}}</p>
+                             <p class="e-btn plane inverted success"><span style="color:#000;">Points:</span>{{clue.clue_points}}</p>
+                            </div>
                         </div>
+                       {% endfor %}
                     </div>
-                </div>                
-            </div>
-        </section>
+                </div>
 {% endblock %}
     
 

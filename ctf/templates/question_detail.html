@@ -93,6 +93,16 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h6 class="card-body question_text">Question: {{question.question_text|linebreaks}}</h6>
+                                    
+                                    {% if question_has_file %}
+                                    <div id="question-file-container">
+                                        <a class="e-btn small sky " download href="{% static question.question_file_path %}">Download File <span class="fa fa-download"></span></a>
+                                        {% if question_has_image %}
+                                            <img src="{% static question.question_file_path %}" /> 
+                                        {% endif %}                                       
+                                    </div>
+                                    {% endif %}
+
                                     {% if te_question.is_completed %}
                                     {% else %}
                                         {% if clue_exist %}

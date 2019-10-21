@@ -37,6 +37,9 @@ from django.db.models import Sum
 from ctf import models
 from ctf.forms import AnswerForm,TeamCreateForm,MemberForm
 
+import os.path
+from django.conf import settings
+
 # django redis connection.
 redis_connection = get_redis_connection("default")
 
@@ -225,10 +228,22 @@ def get_question_detail(request,pk):
             data = "{} opened First time Question Number {}".format(str(request.user.team), str(question.id))
             r.set('question_action', data)
 
+        context["question_has_file"] = False
+        context["question_has_image"] = False
+        file_path = question.question_file_path.strip()
+        # fp = (settings.CTF_DIR + "/" + file_path).replace('\\','/')
+        # print(fp)
+        if file_path:
+            # if os.path.exists(fp):
+            context["question_has_file"] = True
+            if file_path.lower().endswith(('.png', '.jpg', '.jpeg', '.jiff')):
+                context["question_has_image"] = True
+
+
         context['clue_added'] = True
         if question.question_has_clue:
             clues_count = models.Clue.objects.filter(question=question).count()
-            print(clues_count)
+            # print(clues_count)
             if clues_count == team_question.clue_version:
                 taken_clues = models.Clue.objects.filter(
                     question=question)[:team_question.clue_version]

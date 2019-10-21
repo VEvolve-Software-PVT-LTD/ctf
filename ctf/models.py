@@ -128,6 +128,10 @@ class Question(TimeStamp):
     question_text = models.TextField(
         _("Question")
     )
+    question_file_path = models.CharField(
+        _("Question File Path"),
+        max_length=500
+    )
     question_points = models.PositiveIntegerField(
         _("Question Points")
     )
@@ -135,7 +139,6 @@ class Question(TimeStamp):
         _("Question Has Clue"),
         default=True
     )
-    
     
     def __str__(self):
         return self.question_text

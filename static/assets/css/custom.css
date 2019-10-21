@@ -1,0 +1,10 @@
+/* Custom css styles and fixes */
+/* *************************** */
+
+/* Question Detail */
+#question-file-container {
+    padding: 1.25rem;
+
+}
+
+#question-file-container img { margin-left: 0; }

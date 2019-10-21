@@ -144,9 +144,10 @@ LOGOUT_REDIRECT_URL = '/login/'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-STATIC_ROOT=os.path.join(BASE_DIR, 'assets')
+STATIC_ROOT=os.path.join(BASE_DIR, '/static/assets')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+CTF_DIR = os.path.join("static", "ctf_files")
 CACHE_TTL = 60 * 15
 
 CACHES = {

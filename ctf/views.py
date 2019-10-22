@@ -66,15 +66,13 @@ def permission_denied(request):
 
 
 def handler404(request, *args, **argv):
-    response = render_to_response('404.html', {},
-                                  context_instance=RequestContext(request))
+    response = render(request, '404.html', {})
     response.status_code = 404
     return response
 
 
 def handler500(request, *args, **argv):
-    response = render_to_response('500.html', {},
-                                  context_instance=RequestContext(request))
+    response = render(request, '500.html', {})
     response.status_code = 500
     return response
 
@@ -297,16 +295,16 @@ def get_clue(request, pk):
 
 
 # note : we are not using it.
-@login_required(login_url=reverse_lazy('login_view'))
-@user_passes_test(user_check,
-                  login_url=reverse_lazy('permission_denied'))
-def team_dash_board(request):
-    """
-    Team dash board view
-    displays total attempted questions with points.
-    """
-    team = models.Team.objects.all_with_prefetch_details(user=request.user)
-    return render(request, 'team_dash_board.html', {'team': team})
+# @login_required(login_url=reverse_lazy('login_view'))
+# @user_passes_test(user_check,
+#                   login_url=reverse_lazy('permission_denied'))
+# def team_dash_board(request):
+#     """
+#     Team dash board view
+#     displays total attempted questions with points.
+#     """
+#     team = models.Team.objects.all_with_prefetch_details(user=request.user)
+#     return render(request, 'team_dash_board.html', {'team': team})
 
 
 class TeamDashBoard(DetailView):
@@ -387,18 +385,18 @@ class TeamDashBoard(DetailView):
 #@login_required(login_url=reverse_lazy('login_view'))
 #@user_passes_test(super_user_check,
 #                  login_url=reverse_lazy('permission_denied'))
-def team_rankings(request):
-    """
-    Total Team Rankings for admin.
-    """
-    context=  {}
-    context['url'] = '/events/'
-    # context['last_id'] = get_current_event_id(['time'])
-    # context['question_id'] = get_current_event_id(['begin'])
-    return render(request,
-                  'event.html',
-                  context
-                 )
+# def team_rankings(request):
+#     """
+#     Total Team Rankings for admin.
+#     """
+#     context=  {}
+#     context['url'] = '/events/'
+#     # context['last_id'] = get_current_event_id(['time'])
+#     # context['question_id'] = get_current_event_id(['begin'])
+#     return render(request,
+#                   'event.html',
+#                   context
+#                  )
 
 @login_required(login_url=reverse_lazy('login_view'))
 @user_passes_test(super_user_check,
@@ -406,19 +404,19 @@ def team_rankings(request):
 def admin_dashboard(request):
     context = {}
     scores = models.TeamQuestion.objects.filter(is_completed=True)
-    print(scores)
+    # print(scores)
     team_scores = list(scores.values('team__team_name').annotate(count=Sum('gain_points')).order_by('-count'))
-    print(team_scores)
+    # print(team_scores)
     context['team_scores'] = team_scores
     return render(request, 'team_scores.html',context)
 
 
-import random
-import json
+# import random
+# import json
 
-def _send_worker():
-    while True:
-        total_page = 'hi'
+# def _send_worker():
+#     while True:
+#         total_page = 'hi'
         # if r.exists('question_action'):
         #     question_action = r.get('question_action').decode('utf-8')
         # else:
@@ -488,7 +486,7 @@ def _send_worker():
         # print("hello")
         # total_page = _html_data + _second_section
         # send_event('time', 'message',total_page)
-        time.sleep(1)
+        # time.sleep(1)
 
 
 
@@ -511,19 +509,19 @@ def _send_worker():
 
 
 # note : we are ot using below view.
-@login_required(login_url=reverse_lazy('login_view'))
-@user_passes_test(user_check,
-                  login_url=reverse_lazy('permission_denied'))
-def answer_question(request):
-    form = AnswerForm(request.POST)
-    print(form)
-    question = models.Question.objects.get(id=request.POST['question'])
-    if form.is_valid():
-        if request.POST['answer'] == question.answer:
-            return redirect('questions_list')
-        else:
-            message.warning(request, _("Sorry Wrong Attempt."))
-    return redirect('question_detail', pk=instance_question.id)
+# @login_required(login_url=reverse_lazy('login_view'))
+# @user_passes_test(user_check,
+#                   login_url=reverse_lazy('permission_denied'))
+# def answer_question(request):
+#     form = AnswerForm(request.POST)
+#     print(form)
+#     question = models.Question.objects.get(id=request.POST['question'])
+#     if form.is_valid():
+#         if request.POST['answer'] == question.answer:
+#             return redirect('questions_list')
+#         else:
+#             message.warning(request, _("Sorry Wrong Attempt."))
+#     return redirect('question_detail', pk=instance_question.id)
 
 
 class TeamRegisterView(FormView):
@@ -544,17 +542,17 @@ def registration_closed(request):
     return render(request, 'registration_closed.html')
 
 
-@login_required
-def add_team_member(request):
-    if request.method == 'POST':
-        form = MemberForm(request.POST)
-        if form.is_valid():
-            member = form.cleaned_data['member']
-            member_instance = models.Member.objects.create(
-                full_name=member,
-            )
-            team_member = models.TeamMember.objects.create(
-                team=request.user.team,
-                member=member_instance,
-            )
-            return redirect('team_dash_board', pk=request.user.team.id)
+# @login_required
+# def add_team_member(request):
+#     if request.method == 'POST':
+#         form = MemberForm(request.POST)
+#         if form.is_valid():
+#             member = form.cleaned_data['member']
+#             member_instance = models.Member.objects.create(
+#                 full_name=member,
+#             )
+#             team_member = models.TeamMember.objects.create(
+#                 team=request.user.team,
+#                 member=member_instance,
+#             )
+#             return redirect('team_dash_board', pk=request.user.team.id)

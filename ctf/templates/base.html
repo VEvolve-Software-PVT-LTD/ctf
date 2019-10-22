@@ -106,6 +106,7 @@
                                         <li class="">
                                              <a class="page-scroll" href="{% url 'team_rankings' %}">Team Ranks</a>
                                         </li>
+                                        <li class=""><a class="page-scroll" href="{% url 'team_register_view' %}">Team Register</a></li>
                                         {% else %}
                                          <li class="">
                                              <a class="page-scroll" href="{% url 'team_dash_board' request.user.team.id%}">Score Board</a>
@@ -116,11 +117,12 @@
                                                href="{% url 'questions_list' %}">Questions
                                             </a>
                                         </li>
+                                        
                                         {% endif %}
                                 <li class=""><a class="page-scroll" href="{% url 'logout_view' %}">Logout</a></li>
                                 {% else %}
                                     <li class=""><a class="page-scroll" href="{% url 'login_view' %}">Login</a></li>
-                                    <li class=""><a class="page-scroll" href="{% url 'team_register_view' %}">Team Register</a></li>
+                                    
                                 {% endif %}
                             </ul>
                         </div>

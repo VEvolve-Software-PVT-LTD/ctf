@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^questions/(?P<pk>[0-9]+)/detail/$', views.get_question_detail, name='question_detail'),
     url(r'^questions/(?P<pk>[0-9]+)/clue/$', views.get_clue, name='question_clue'),
     url(r'^team_dashboard/(?P<pk>[0-9]+)/profile$', views.TeamDashBoard.as_view(), name='team_dash_board'),
-    url(r'^answer_question/$',views.answer_question, name='answer_question'),
+    # url(r'^answer_question/$',views.answer_question, name='answer_question'),
     url(r'^questions/$', views.get_questions_list, name='questions_list'),
     url(r'^team_rankings/$', views.admin_dashboard, name='team_rankings'),
     url(r'^permission_denied/$', views.permission_denied, name='permission_denied'),
@@ -42,11 +42,11 @@ urlpatterns = [
         views.registration_closed,
         name='registration_closed_view',
     ),
-    url(
-        r'^add_team_member',
-        views.add_team_member,
-        name='add_team_member',
-    ),
+    # url(
+    #     r'^add_team_member',
+    #     views.add_team_member,
+    #     name='add_team_member',
+    # ),
     url(r'^$', views.landing_page, name='landing_page'),
     
 ]

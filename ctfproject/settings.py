@@ -37,7 +37,7 @@ INSTALLED_APPS.extend([
     'crispy_forms',
 ])
 
-ASGI_APPLICATION = "ctfproject.routing.application"
+# ASGI_APPLICATION = "ctfproject.routing.application"
 
 
 GRIP_URL = os.environ.get('GRIP_URL')
@@ -93,7 +93,7 @@ DATABASES['default'] = {
         'NAME': 'ctfproject',
         'USER': 'postgres',
         'PASSWORD': 'admin',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
 }
 
@@ -144,7 +144,7 @@ LOGOUT_REDIRECT_URL = '/login/'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-STATIC_ROOT=os.path.join(BASE_DIR, '/static/assets')
+STATIC_ROOT= os.path.join(BASE_DIR, 'static/assets/')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 CTF_DIR = os.path.join("static", "ctf_files")
@@ -167,3 +167,6 @@ TEAM_CACHE = 'vev/1278/ctf-teams'
 QUESTIONS_CACHE = 'vev/1278/ctf-questions'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
+# SECURE_SSL_REDIRECT = False

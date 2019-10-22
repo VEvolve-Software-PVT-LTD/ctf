@@ -120,7 +120,7 @@ def get_questions_list(request):
     """ returns questions list."""
     key = 'vev/1278/ctf-questions'
     user_key = '{}-key'.format(str(request.user.team))
-    print(user_key)
+    # print(user_key)
     current_action = "Standing in Questions List"
     r.set(user_key, current_action)
     if key in cache:
@@ -129,20 +129,20 @@ def get_questions_list(request):
         questions = list(models.Question.objects.all())
         cache.set(key, questions, timeout=CACHE_TTL)
 
-    print(type(questions))
+    # print(type(questions))
     team_open_questions = list(models.TeamQuestion.objects.filter(team=request.user.team))
-    print(team_open_questions)
+    # print(team_open_questions)
     top_ids = []
     total_qids = []
     tops = []
 
     for i in questions:
         total_qids.append(i.id)
-    print(total_qids)
+    # print(total_qids)
 
     for i in team_open_questions:
         top_ids.append(i.question.id)
-    print(top_ids)
+    # print(top_ids)
     question_bank = []
     instance_question = {}
 
@@ -161,9 +161,12 @@ def get_questions_list(request):
             instance_question['points'] = question.question_points
             question_bank.append(instance_question)
             instance_question = {}
+
+        sorted_qb = sorted(question_bank, key = lambda i: i['id'])
+
     return render(request,
                   'questions_list.html',
-                  {'questions': question_bank}
+                  {'questions': sorted_qb}
                  )
 
 

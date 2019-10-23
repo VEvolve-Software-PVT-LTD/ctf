@@ -70,15 +70,16 @@
             <div class="promo-section-wrap">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-4"></div>
-                        <div class="col-md-4 offset-md-4">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-7 offset-md-7">
                                     <div id="output"></div>
-		              <p id="ms"></p>
+		                        <p id="ms"></p>
                             <table class="table">
                                 <thead class="text-center bg-primary">
                                     <tr>
                                         <td>Team</td>
                                         <td>Total Points</td>
+                                        <td>Completed Time</td>
                                     </tr>
                                 </thead>
                                 <tbody class="text-center">
@@ -86,6 +87,7 @@
                                     <tr>
                                         <td>{{team_score.team__team_name}}</td>
                                         <td>{{team_score.count}}</td>
+                                        <td>{{team_score.team__last_question_time | date:'h:i a'}}</td>
                                     </tr>
                                     {% endfor%}
                                 </tbody>

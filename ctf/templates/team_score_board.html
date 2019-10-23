@@ -129,6 +129,8 @@ aside {
                                         <td>Question</td>
                                         <td>Base Points</td>
                                         <td>Gain Points</td>
+                                        <td>End Time</td>
+                                        <td>Time Taken</td>
                                         <td>Status</td>
                                     </tr>
                                 </thead>
@@ -138,9 +140,12 @@ aside {
                                         <td>{{question.question.id}}</td>
                                         <td>{{question.base_points}}</td>
                                         <td>{{question.gain_points}}</td>
+                                        <td>{{question.ended_at | date:'h:i a'}}</td>
                                         {% if question.is_completed %}
+                                            <td>{{question.time_taken_HHmm}}</td>
                                             <td class="text-success">Completed</td>
                                         {% else %}
+                                            <td></td>
                                             <td class="text-warning">Process</td>
                                         {% endif %}
                                     </tr>
@@ -164,7 +169,7 @@ aside {
                                     <p class="team_member team_content">{{total_points}}</p><br>
                             </div>
                             <div class="card team_card">
-                                <h6 class="card-title team_text">Team Questions</h6>
+                                <h6 class="card-title team_text">Answered Questions</h6>
                                     <p class="team_content team_member">{{solved_questions_number}}</p><br>
                             </div><hr/>
                             <!-- <div class="">                                

@@ -5,7 +5,7 @@ import time
 import threading
 import json
 import redis
-from datetime import datetime
+from datetime import datetime, timezone
 from django.shortcuts import render,redirect,reverse
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -188,9 +188,23 @@ def get_question_detail(request,pk):
                     question=question,
                     team=request.user.team
                 )
-                team_question.ended_at = datetime.now()
+                # print(timezone)
+                end_time = datetime.now(timezone.utc).astimezone()
+                team_question.ended_at = end_time
+                diff = team_question.ended_at - team_question.started_at
+                # print(diff)
+                team_question.time_taken = diff
                 team_question.is_completed = True
                 team_question.save()
+
+                #save to team model
+                team_instance = models.Team.objects.get(id=request.user.team.id)
+                # print(points[0])
+                # print("Saving time to team")
+                # print(team_instance.team_name)
+                team_instance.last_question_time = end_time
+                team_instance.save()
+
                 # redirects to questions list on success.
                 data = "{} Answered  Question Number {}".format(str(request.user.team), str(team_question.question.id))
                 r.set('answer_action', data)
@@ -359,23 +373,25 @@ class TeamDashBoard(DetailView):
             team=self.request.user.team
         )
         # print(team_questions)
-        questions = []
-        question ={}
-        for q in team_questions:
-            question['id'] = q.question.id
-            question['gain_points'] = q.gain_points
-            question['base_points'] = q.base_points
-            if q.is_completed:
-                question['remark'] = 'Congratulations'
-                question['status'] = 'Completed'
-                questions.append(question)
-                question = {}
-            else:
-                question['remark'] = 'Try Some Clue'
-                question['status'] = 'In Process'
-                questions.append(question)
-                question = {}
-        context['solved_questions'] = questions
+        # questions = []
+        # question ={}
+        # for q in team_questions:
+        #     question['id'] = q.question.id
+        #     question['gain_points'] = q.gain_points
+        #     question['base_points'] = q.base_points
+        #     if q.is_completed:
+        #         question['remark'] = 'Congratulations'
+        #         question['status'] = 'Completed'
+        #         questions.append(question)
+        #         question = {}
+        #         # print(q.time_taken)
+        #     else:
+        #         question['remark'] = 'Try Some Clue'
+        #         question['status'] = 'In Process'
+        #         questions.append(question)
+        #         question = {}
+        
+        # context['solved_questions'] = questions
         context['form'] = MemberForm
         #
         # context['form_action_url'] = reverse_lazy('add_team_member')
@@ -405,8 +421,13 @@ def admin_dashboard(request):
     context = {}
     scores = models.TeamQuestion.objects.filter(is_completed=True)
     # print(scores)
-    team_scores = list(scores.values('team__team_name').annotate(count=Sum('gain_points')).order_by('-count'))
-    # print(team_scores)
+    team_scores = list(scores.values('team__team_name', 'team__last_question_time').annotate(count=Sum('gain_points')).order_by('-count','team__last_question_time'))
+    print(team_scores)
+
+    #get data from team model
+    # teams_with_points = models.Team.objects.filter(total_points__gte=0)
+    # team_scores = list(teams_with_points.values('team__team_name').annotate(count=Sum('gain_points')).order_by('-count'))
+    # print(teams_with_points)
     context['team_scores'] = team_scores
     return render(request, 'team_scores.html',context)
 

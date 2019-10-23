@@ -78,6 +78,8 @@ class Team(TimeStamp):
     # )
     objects = TeamManager()
     
+    last_question_time = models.DateTimeField(null=True, blank=True)
+    
     def __str__(self):
         return self.team_name
     
@@ -130,7 +132,9 @@ class Question(TimeStamp):
     )
     question_file_path = models.CharField(
         _("Question File Path"),
-        max_length=500
+        max_length=500,
+        default=None,
+        blank=True
     )
     question_points = models.PositiveIntegerField(
         _("Question Points")
@@ -230,13 +234,21 @@ class TeamQuestion(TimeStamp):
     gain_points = models.IntegerField()
     started_at = models.DateTimeField(auto_now_add=True)
     ended_at = models.DateTimeField(null=True, blank=True)
-    time_taken = models.TimeField(null=True, blank=True)
+    time_taken = models.DurationField(null=True, blank=True)
     clue_version = models.PositiveIntegerField(default=0)
     is_completed = models.BooleanField(default=False)
     
     def __str__(self):
         return '{}-{}'.format(str(self.question), str(self.team))
     
+    def time_taken_HHmm(self):
+        sec = self.time_taken.total_seconds()
+        seconds = sec % (24 * 3600) 
+        hour = seconds // 3600
+        seconds %= 3600
+        minutes = seconds // 60
+        seconds %= 60
+        return "%d:%02d:%02d h:m:s" % (hour, minutes, seconds) 
     
     def update_clue_version(self):
         """ updates the clue version on taking clue."""
@@ -252,6 +264,10 @@ class TeamQuestion(TimeStamp):
         
     def completed(self):
         """update question status on submit answer."""
+        print("inside complete qn model")
         self.is_completed = True
         self.ended_at = datetime.now()
         self.save()
+
+    class Meta:
+        ordering = ('question', 'team')

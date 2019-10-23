@@ -137,9 +137,9 @@ aside {
                                 <tbody>
                                     {% for question in team.team_questions.all %}
                                     <tr>
-                                        <td>{{question.question.id}}</td>
-                                        <td>{{question.base_points}}</td>
-                                        <td>{{question.gain_points}}</td>
+                                        <td class="lpad15">{{question.question.id}}</td>
+                                        <td class="lpad15">{{question.base_points}}</td>
+                                        <td class="lpad15">{{question.gain_points}}</td>
                                         <td>{{question.ended_at | date:'h:i a'}}</td>
                                         {% if question.is_completed %}
                                             <td>{{question.time_taken_HHmm}}</td>

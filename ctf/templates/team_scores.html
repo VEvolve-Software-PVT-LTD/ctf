@@ -77,6 +77,7 @@
                             <table class="table">
                                 <thead class="text-center bg-primary">
                                     <tr>
+                                        <td>Rank</td>
                                         <td>Team</td>
                                         <td>Total Points</td>
                                         <td>Completed Time</td>
@@ -85,6 +86,7 @@
                                 <tbody class="text-center">
                                     {% for team_score in team_scores %}
                                     <tr>
+                                        <td>{{team_score.rank}}</td>
                                         <td>{{team_score.team__team_name}}</td>
                                         <td>{{team_score.count}}</td>
                                         <td>{{team_score.team__last_question_time | date:'h:i a'}}</td>

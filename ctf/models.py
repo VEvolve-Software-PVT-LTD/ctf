@@ -133,7 +133,7 @@ class Question(TimeStamp):
     question_file_path = models.CharField(
         _("Question File Path"),
         max_length=500,
-        default=None,
+        default='',
         blank=True
     )
     question_points = models.PositiveIntegerField(

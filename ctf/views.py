@@ -421,8 +421,13 @@ def admin_dashboard(request):
     context = {}
     scores = models.TeamQuestion.objects.filter(is_completed=True)
     # print(scores)
-    team_scores = list(scores.values('team__team_name', 'team__last_question_time').annotate(count=Sum('gain_points')).order_by('-count','team__last_question_time'))
-    print(team_scores)
+    team_scores = []
+    results = scores.values('team__team_name', 'team__last_question_time').annotate(count=Sum('gain_points')).order_by('-count','team__last_question_time')
+    for i, res in enumerate(results):
+        res["rank"] = i + 1
+        # print(res)
+        team_scores.append(res)
+    # print(team_scores)
 
     #get data from team model
     # teams_with_points = models.Team.objects.filter(total_points__gte=0)
@@ -545,9 +550,22 @@ def admin_dashboard(request):
 #     return redirect('question_detail', pk=instance_question.id)
 
 
+
 class TeamRegisterView(FormView):
     form_class = TeamCreateForm
     template_name = 'team_register.html'
+
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            print("is superuser")
+            return super(TeamRegisterView, self).dispatch(request, *args, **kwargs)
+        elif user_check:
+            print("is user")
+            return HttpResponseRedirect(reverse('landing_page'))
+        else:
+            print("not user")
+            return HttpResponseRedirect(reverse('login_view'))
 
     def form_valid(self, form):
         form.save()

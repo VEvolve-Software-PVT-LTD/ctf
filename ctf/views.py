@@ -213,7 +213,7 @@ def get_question_detail(request,pk):
                 r.set(user_key, current_action)
                 smsg = "Success !!! Answered Question Number {}".format(str(team_question.question.id))
                 messages.success(request, _(smsg))
-                
+
                 return redirect('questions_list')
             messages.warning(request, _("Sorry wrong attempt"))
         # redirects to question detail page on wrong attempt.
@@ -563,7 +563,7 @@ class TeamRegisterView(FormView):
         if request.user.is_superuser:
             print("is superuser")
             return super(TeamRegisterView, self).dispatch(request, *args, **kwargs)
-        elif user_check:
+        elif request.user.is_authenticated:
             print("is user")
             return HttpResponseRedirect(reverse('landing_page'))
         else:

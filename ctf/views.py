@@ -211,6 +211,9 @@ def get_question_detail(request,pk):
                 user_key = '{}-key'.format(request.user.team)
                 current_action = "Answered Question Number{}".format(question.id)
                 r.set(user_key, current_action)
+                smsg = "Success !!! Answered Question Number {}".format(str(team_question.question.id))
+                messages.success(request, _(smsg))
+                
                 return redirect('questions_list')
             messages.warning(request, _("Sorry wrong attempt"))
         # redirects to question detail page on wrong attempt.

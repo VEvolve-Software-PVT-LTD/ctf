@@ -27,8 +27,8 @@
                 </div>                
         </section>
         <!--end slider section-->
-        {% if messages %}
-        <div class="" 
+        <!-- {% if messages %}
+        <div class="test" 
              role="alert">
             {% for message in messages %}
                 <p class="text-success {{message.tags}}">
@@ -45,7 +45,17 @@
             </button>
             {% endfor %}
         </div>
+        {% endif %} -->
+
+        {% if messages %}
+            {% for message in messages %}
+                <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                    <p class="text-center">{{ message }}</p>
+                </div>
+            {% endfor %}
         {% endif %}
+
         <section id="pricing" class="pricing-section ptb-90">
             <div class="pricing-section-wrap">
                 <div class="container">

@@ -15,3 +15,11 @@
     color: #ff7600 !important;
 }
 
+.font-weight-bold {
+    font-weight: 700!important;
+}
+
+#member-list.team_card .team_member {
+    text-align: left;
+    margin: 5px 5px 8px 15px;
+}

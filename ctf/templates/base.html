@@ -106,7 +106,9 @@
                                         <li class="">
                                              <a class="page-scroll" href="{% url 'team_rankings' %}">Team Ranks</a>
                                         </li>
-                                        <li class=""><a class="page-scroll" href="{% url 'team_register_view' %}">Team Register</a></li>
+                                            {% if request.user.username == 'admin' %}
+                                            <li class=""><a class="page-scroll" href="{% url 'team_register_view' %}">Team Register</a></li>
+                                            {% endif %}
                                         {% else %}
                                          <li class="">
                                              <a class="page-scroll" href="{% url 'team_dash_board' request.user.team.id%}">Score Board</a>

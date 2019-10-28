@@ -18,11 +18,12 @@
             height: 30px;
             color: #ffffff;
             text-align: center;
+            padding-top: 5px;
         }
         .team_card{
-            height: 20vh;
+            min-height: 20vh;
             border: 1px solid #9400D3;
-            margin: 5px;
+            margin: 7px 0;
         }
         .team_content{
             padding: 50px;
@@ -129,8 +130,8 @@ aside {
                                         <td>Question</td>
                                         <td>Base Points</td>
                                         <td>Gain Points</td>
-                                        <td>End Time</td>
-                                        <td>Time Taken</td>
+                                        <td>Completed At</td>
+                                        <!-- <td>Time Taken</td> -->
                                         <td>Status</td>
                                     </tr>
                                 </thead>
@@ -142,10 +143,10 @@ aside {
                                         <td class="lpad15">{{question.gain_points}}</td>
                                         <td>{{question.ended_at | date:'h:i a'}}</td>
                                         {% if question.is_completed %}
-                                            <td>{{question.time_taken_HHmm}}</td>
+                                            <!-- <td>{{question.time_taken_HHmm}}</td> -->
                                             <td class="text-success">Completed</td>
                                         {% else %}
-                                            <td></td>
+                                            <!-- <td></td> -->
                                             <td class="text-warning">Process</td>
                                         {% endif %}
                                     </tr>
@@ -154,19 +155,22 @@ aside {
                             </table>                            
                         </div>
                         <div class="col-lg-3 fixed" style="padding: 0px;">
-                            <div class="card team_card">
+                            <div id="member-list" class="card team_card">
                                 <h6 class="card-title team_text">Team Members</h6>
                                 <div class="row">
                                     {% for member in team.team_members.all %}
                                         <div class="col-lg-6">
-                                            <p class="team_member"><i class="fa-user-o"></i>{{member.member.full_name}}</p><br>
+                                            <p class="team_member">
+                                                <i class="fa-user-o"></i>
+                                                <span>{{member.member.full_name}}</span>
+                                            </p>
                                         </div>     
                                     {% endfor %}                               
                                 </div>
                             </div>
                             <div class="card team_card">
-                                <h6 class="card-title team_text">Team Points</h6>                                
-                                    <p class="team_member team_content">{{total_points}}</p><br>
+                                <h6 class="card-title team_text">Total Points</h6>                                
+                                    <p class="team_member team_content">{{total_points | default:''}}</p><br>
                             </div>
                             <div class="card team_card">
                                 <h6 class="card-title team_text">Answered Questions</h6>

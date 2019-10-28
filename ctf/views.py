@@ -211,7 +211,7 @@ def get_question_detail(request,pk):
                 user_key = '{}-key'.format(request.user.team)
                 current_action = "Answered Question Number{}".format(question.id)
                 r.set(user_key, current_action)
-                smsg = "Success !!! Answered Question Number {}".format(str(team_question.question.id))
+                smsg = "Answered Question Number {}. Earned {} Points".format(str(team_question.question.id), str(team_question.gain_points))
                 messages.success(request, _(smsg))
 
                 return redirect('questions_list')
@@ -337,7 +337,7 @@ class TeamDashBoard(DetailView):
         """ allowing to access only requested team."""
         team =self.request.user.team
         obj=self.get_object()
-        print(obj)
+        # print(obj)
         if team != obj:
             return redirect('team_dash_board', pk=team.id)
         user_key = '{}-key'.format(request.user.team)
@@ -432,10 +432,6 @@ def admin_dashboard(request):
         team_scores.append(res)
     # print(team_scores)
 
-    #get data from team model
-    # teams_with_points = models.Team.objects.filter(total_points__gte=0)
-    # team_scores = list(teams_with_points.values('team__team_name').annotate(count=Sum('gain_points')).order_by('-count'))
-    # print(teams_with_points)
     context['team_scores'] = team_scores
     return render(request, 'team_scores.html',context)
 
@@ -562,7 +558,11 @@ class TeamRegisterView(FormView):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_superuser:
             print("is superuser")
-            return super(TeamRegisterView, self).dispatch(request, *args, **kwargs)
+            if request.user.username == "admin":
+                return super(TeamRegisterView, self).dispatch(request, *args, **kwargs)
+            else:
+                print("not main admin")
+                return HttpResponseRedirect(reverse('landing_page'))
         elif request.user.is_authenticated:
             print("is user")
             return HttpResponseRedirect(reverse('landing_page'))
@@ -572,7 +572,7 @@ class TeamRegisterView(FormView):
 
     def form_valid(self, form):
         form.save()
-        return HttpResponseRedirect(reverse('login_view'))
+        return HttpResponseRedirect(reverse('landing_page'))
 
     def form_invalid(self, form):
         print(form.errors)

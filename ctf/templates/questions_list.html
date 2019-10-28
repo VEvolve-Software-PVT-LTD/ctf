@@ -51,7 +51,7 @@
             {% for message in messages %}
                 <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
                 <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <p class="text-center">{{ message }}</p>
+                    <p class="text-center text-success font-weight-bold">{{ message }}</p>
                 </div>
             {% endfor %}
         {% endif %}

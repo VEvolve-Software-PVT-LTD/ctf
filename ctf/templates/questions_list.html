@@ -74,10 +74,15 @@
                             <div class="content-md container">
                                 <div class="row">
                                     {% for question in questions %}
-                                    <div class="col-md-3" style="margin-top: 1%">
+                                    <div class="col-md-4" style="margin-top: 1%">
                                         <div class="e-card">
                                             <div class="card-body">
-                                                <h5 class="card-title info team_member">Flag {{question.id}}</h5><br>
+                                                <h5 class="card-title info team_member">Flag {{question.id}}
+                                                    {% if question.difficulty %}
+                                                        <span class="qn-flag-heading qn-{{question.difficulty}}">({{question.difficulty | title}})</span>
+                                                    {% endif %}
+                                                </h5>
+                                                <br>
                                                 <a class="e-btn plane inverted primary">Points: {{ question.points}}</a>
                                                 {% if question.status == True %}
                                                 <a class="e-btn plane inverted success" href="{% url 'question_detail' question.id %}">
@@ -89,11 +94,11 @@
                                                                 Start
                                                         </a>                                                    
                                                     {% else %}
-                                                        <a class="e-btn plane inverted " href="{% url 'question_detail' question.id %}">
-                                                            Doing
-                                                        </a>                                                    
+                                                        <a class="e-btn plane inverted " href="{% url 'question_detail' question.id %}">In Progress</a>                                                    
                                                     {% endif %}
                                                 {% endif %}
+
+                                                
                                             </div>                                            
                                         </div>
 

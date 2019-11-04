@@ -147,9 +147,11 @@ def get_questions_list(request):
     for i in total_qids:
         if i in top_ids:
             question = models.TeamQuestion.objects.get(question__id=i, team=request.user.team)
+            question_m = models.Question.objects.get(id=i)
             instance_question['id']=i
             instance_question['status'] = question.is_completed
             instance_question['points'] = question.base_points
+            instance_question['difficulty'] = question_m.question_difficulty
             question_bank.append(instance_question)
             instance_question = {}
         else:
@@ -157,6 +159,7 @@ def get_questions_list(request):
             instance_question['id'] = i
             instance_question['status'] = 'unopen'
             instance_question['points'] = question.question_points
+            instance_question['difficulty'] = question.question_difficulty
             question_bank.append(instance_question)
             instance_question = {}
 

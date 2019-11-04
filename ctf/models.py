@@ -139,6 +139,19 @@ class Question(TimeStamp):
     question_points = models.PositiveIntegerField(
         _("Question Points")
     )
+
+    QUESTION_CHOICES = (
+        ('', 'Please choose difficulty level'),
+        ("easy", 'Easy'),
+        ("medium", 'Medium'),
+        ("hard", 'Hard'),
+    )
+    question_difficulty = models.CharField(
+        _("Question Difficulty"),
+        max_length=20,
+        choices=QUESTION_CHOICES,
+        default='')
+
     question_has_clue = models.BooleanField(
         _("Question Has Clue"),
         default=True

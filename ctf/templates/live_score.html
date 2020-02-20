@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+    {% block extra_code %}
+        
+    {% endblock %}
+{% block app_content %}
+
+<script>
+
+  var updater;
+
+  function refreshPage () {
+    const url = window.location.href;
+    const request_parameters = {
+        "live_update": "y"
+    }
+    $.getJSON(url,request_parameters).done(response => {
+            
+      $("#live-content").html(response['html_from_view']);
+      console.log("Refreshing page...");
+
+              
+    });
+  }     
+
+  function live_update() {
+    updater = setInterval(refreshPage, 10000); // 10 sec
+  } 
+
+  function stop_update() {
+    clearInterval(updater);
+  }
+
+
+  $(document).ready(function(){
+    live_update();
+  });
+
+</script>
+
+ <!--start slider section-->
+        <section id="hero" class="hero-content hero-slider-section-one section-lg" style="height: 200px;">
+            <div class="hero-slider-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="hero-content-wrap">
+                                <div class="hero-content">  
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-shape">
+                <div class="river-wave"></div>
+                <div class="river-wave"></div>
+            </div>
+        </section>
+        <!--end slider section-->
+
+        <section class="promo-section ptb-90">
+            <div class="promo-section-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-7 offset-md-7">
+                                    <div id="output"></div>
+		                        <p id="ms"></p>
+
+                            <div id="live-content">
+                              {% include 'live_score_partial.html' %}
+                            </div
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+{% endblock %}

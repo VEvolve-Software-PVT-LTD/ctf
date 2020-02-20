@@ -14,6 +14,7 @@ urlpatterns = [
     # url(r'^answer_question/$',views.answer_question, name='answer_question'),
     url(r'^questions/$', views.get_questions_list, name='questions_list'),
     url(r'^team_rankings/$', views.admin_dashboard, name='team_rankings'),
+    url(r'^score/$', views.admin_live_score, name='score'),
     url(r'^permission_denied/$', views.permission_denied, name='permission_denied'),
     
     # url(r'^customer-service/(?P<pk>[0-9]+)/$', views.room, name='cs_chat'),    

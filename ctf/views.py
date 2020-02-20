@@ -22,6 +22,7 @@ from django.http import (
     HttpResponse,
     HttpResponseServerError,
     HttpResponseRedirect,
+    JsonResponse
 )
 from django.views.generic import FormView
 from django_redis import get_redis_connection
@@ -39,6 +40,8 @@ from ctf.forms import AnswerForm,TeamCreateForm,MemberForm
 
 import os.path
 from django.conf import settings
+
+from django.template.loader import render_to_string
 
 # django redis connection.
 redis_connection = get_redis_connection("default")
@@ -437,6 +440,41 @@ def admin_dashboard(request):
 
     context['team_scores'] = team_scores
     return render(request, 'team_scores.html',context)
+
+
+@login_required(login_url=reverse_lazy('login_view'))
+@user_passes_test(super_user_check,
+                 login_url=reverse_lazy('permission_denied'))
+def admin_live_score(request):
+    context = {}
+    scores = models.TeamQuestion.objects.filter(is_completed=True)
+    # print(scores)
+    team_scores = []
+    results = scores.values('team__team_name', 'team__last_question_time').annotate(
+        count=Sum('gain_points')).order_by('-count','team__last_question_time'
+        )[:5]
+    for i, res in enumerate(results):
+        res["rank"] = i + 1
+        res["members"] = models.TeamMember.objects.filter(team__team_name = res["team__team_name"])
+        # print(i)
+        # print(res)
+        # print(res["team__team_name"])
+        team_scores.append(res)
+    # print(team_scores)
+
+
+    if request.is_ajax():
+        html = render_to_string(
+            template_name = "live_score_partial.html", 
+            context={
+                "team_scores": team_scores
+            }
+        )
+        data_dict = {"html_from_view": html}
+        return JsonResponse(data=data_dict, safe=False)
+
+    context['team_scores'] = team_scores
+    return render(request, 'live_score.html',context)
 
 
 # import random

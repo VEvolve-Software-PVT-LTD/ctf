@@ -62,6 +62,38 @@
     </style>
     {% block extra_code %}
     {% endblock %}
+
+    
+<!--=========== all js file link ==============-->
+
+
+<!-- main jQuery -->
+<script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>
+
+<!-- bootstrap core js -->
+<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+
+<!-- smothscroll -->
+<script src="{% static 'assets/js/jquery.easeScroll.min.js' %}"></script>
+
+<!--owl carousel-->
+<script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+
+<!-- scrolling nav -->
+<script src="{% static 'assets/js/jquery.easing.min.js' %}"></script>
+
+<!--fullscreen background video js-->
+<!-- <script src="{% static 'assets/js/jquery.mb.ytplayer.min.js' %}"></script> -->
+
+<!--typed js -->
+<script src="{% static 'assets/js/typed.min.js' %}"></script>
+
+<!--magnific popup js-->
+<script src="{% static 'assets/js/magnific-popup.min.js' %}"></script>
+
+<!-- custom script -->
+<script src="{% static 'assets/js/scripts.js' %}"></script>
+
 </head>
 <body>
 <!-- Preloader -->
@@ -104,6 +136,9 @@
                                 {% if request.user.is_authenticated %}
                                         {% if request.user.is_superuser %}
                                         <li class="">
+                                             <a class="page-scroll" href="{% url 'score' %}">Top 5</a>
+                                        </li>
+                                        <li class="">
                                              <a class="page-scroll" href="{% url 'team_rankings' %}">Team Ranks</a>
                                         </li>
                                             {% if request.user.username == 'admin' %}
@@ -143,36 +178,6 @@
 </div>
 <!--end main container -->
 
-
-<!--=========== all js file link ==============-->
-
-
-<!-- main jQuery -->
-<script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>
-
-<!-- bootstrap core js -->
-<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
-
-<!-- smothscroll -->
-<script src="{% static 'assets/js/jquery.easeScroll.min.js' %}"></script>
-
-<!--owl carousel-->
-<script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
-
-<!-- scrolling nav -->
-<script src="{% static 'assets/js/jquery.easing.min.js' %}"></script>
-
-<!--fullscreen background video js-->
-<!-- <script src="{% static 'assets/js/jquery.mb.ytplayer.min.js' %}"></script> -->
-
-<!--typed js -->
-<script src="{% static 'assets/js/typed.min.js' %}"></script>
-
-<!--magnific popup js-->
-<script src="{% static 'assets/js/magnific-popup.min.js' %}"></script>
-
-<!-- custom script -->
-<script src="{% static 'assets/js/scripts.js' %}"></script>
 
 </body>
 </html>

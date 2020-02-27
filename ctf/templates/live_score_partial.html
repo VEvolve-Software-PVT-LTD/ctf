@@ -1,4 +1,4 @@
-<table class="table" style="font-size: 18px;">
+<table class="table" style="font-size: 30px;">
     <thead class="text-center bg-primary">
         <tr>
             <td>Rank</td>
@@ -17,7 +17,7 @@
             <td>{{team_score.team__last_question_time | date:'h:i a'}}</td>
             <td>
                 {% for member in team_score.members %}
-                    <p>{{member.member.full_name}}</p>
+                    {{member.member.full_name}}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
             </td>
         </tr>

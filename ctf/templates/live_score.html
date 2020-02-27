@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_live_score.html' %}
     {% block extra_code %}
         
     {% endblock %}
@@ -37,6 +37,7 @@
 
 </script>
 
+
  <!--start slider section-->
         <section id="hero" class="hero-content hero-slider-section-one section-lg" style="height: 200px;">
             <div class="hero-slider-wrap">
@@ -60,13 +61,12 @@
         </section>
         <!--end slider section-->
 
-        <section class="promo-section ptb-90">
+        <section class="promo-section ptb-20">
             <div class="promo-section-wrap">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-7 offset-md-7">
-                                    <div id="output"></div>
+                        <div class="col">
+                            <div id="output"></div>
 		                        <p id="ms"></p>
 
                             <div id="live-content">

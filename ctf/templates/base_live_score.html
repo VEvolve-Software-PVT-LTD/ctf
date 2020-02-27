@@ -59,6 +59,8 @@
     border-bottom: 20px solid white;
     border-left: 15px solid #4FC6DB;
 }
+
+
     </style>
     {% block extra_code %}
     {% endblock %}
@@ -104,7 +106,7 @@
         <header class="header">
             <!--start navbar-->
             <div class="navbar navbar-default navbar-fixed-top">
-                <div class="container">
+                <div class="container"  style="margin-left: 100px; width: 1255px;">
                     <div class="row">
                         <div class="navbar-header page-scroll">
                             <button type="button"
@@ -116,55 +118,26 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a class="navbar-brand page-scroll"href="{% url 'landing_page' %}" style="margin-top: -18px;">
-
-                                    {% comment %} <h5 style="color:white;">CAPTURE THE FLAG </h5> {% endcomment %}
-
-                                <img src="{% static 'assets/img/netapp_logo.png' %}" style="width: 65px; display:inline-block; vertical-align: middle;" alt="">
-                                <h5 style="color:white; margin-left:20px; display:inline-block;">CAPTURE THE FLAG </h5>
+                            <a class="navbar-brand page-scroll" href="{% url 'landing_page' %}">
+                                <img src="{% static 'assets/img/netapp_logo.png' %}" style="width: 70px; display:inline-block; vertical-align: middle;" alt="">
+                                <h5 style="color:white; margin-left:14px; font-size: 23px; display:inline-block;">CAPTURE THE FLAG </h5>
                             </a>
                         </div>
 
                         <!-- Collect the nav links, forms, and other content for toggling -->
                         <div class="navbar-collapse collapse" id="myNavbar">
-                            <ul class="nav navbar-nav navbar-right">
+                            <ul class="nav navbar-nav navbar-left" style="margin-left:75px;">
                                 <li class="">
-                                    <a
-                                       class="page-scroll"
-                                       href="{% url 'landing_page' %}">
-                                        Home
-                                    </a>
+                                    <img style="margin-top:10px;" src="{% static 'assets/img/seccon_arial_white.png' %}" alt="">
                                 </li>
-                                {% if request.user.is_authenticated %}
-                                        {% if request.user.is_superuser %}
-                                        <li class="">
-                                             <a class="page-scroll" href="{% url 'score' %}">Top 5</a>
-                                        </li>
-                                        <li class="">
-                                             <a class="page-scroll" href="{% url 'team_rankings' %}">Team Ranks</a>
-                                        </li>
-                                            {% if request.user.username == 'admin' %}
-                                            <li class=""><a class="page-scroll" href="{% url 'team_register_view' %}">Team Register</a></li>
-                                            {% endif %}
-                                        {% else %}
-                                            
-                                            <li class="">
-                                                <a class="page-scroll" href="{% url 'team_dash_board' request.user.team.id%}">Score Board</a>
-                                            </li>
-                                            <li class="">
-                                                <a
-                                                class="page-scroll"
-                                                href="{% url 'questions_list' %}">Questions
-                                                </a>
-                                            </li>
-                                            
-                                        
-                                        {% endif %}
-                                <li class=""><a class="page-scroll" href="{% url 'logout_view' %}">Logout</a></li>
-                                {% else %}
-                                    <li class=""><a class="page-scroll" href="{% url 'login_view' %}">Login</a></li>
-                                    
-                                {% endif %}
+                                
+                            </ul>
+
+                            <ul class="nav navbar-nav navbar-right" style="margin-top:30px;">
+                                <li class="">
+                                    <h6 style="color:white; font-size: 16px;">Product Security Group</h6>
+                                </li>
+                                
                             </ul>
                         </div>
 

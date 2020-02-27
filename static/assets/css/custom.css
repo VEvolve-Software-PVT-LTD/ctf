@@ -31,3 +31,25 @@
 .qn-flag-heading.qn-easy { color: green; }
 .qn-flag-heading.qn-medium { color: orange; }
 .qn-flag-heading.qn-hard { color: red; }
+
+
+
+
+.hero-slider-section-one:after, .hero-slider-section-two:after{
+    background: -webkit-linear-gradient(150deg, #1e4a93 15%, rgba(89, 140, 216, 0.89) 70%, rgba(130, 160, 217, 0.74) 94%) !important;
+    background: -moz-linear-gradient(150deg, #1e4a93 15%, rgba(89, 140, 216, 0.89) 70%, rgba(130, 160, 217, 0.74) 94%) !important;
+    background: -ms-linear-gradient(150deg, #1e4a93 15%, rgba(89, 140, 216, 0.89) 70%, rgba(130, 160, 217, 0.74) 94%) !important;
+    background: -o-linear-gradient(150deg, #1e4a93 15%, rgba(89, 140, 216, 0.89) 70%, rgba(130, 160, 217, 0.74) 94%) !important;
+    background: linear-gradient(150deg, #1e4a93 15%, rgba(89, 140, 216, 0.89) 70%, rgba(130, 160, 217, 0.74) 94%) !important;
+}
+
+.team_text {
+    background-color: #1e4a93 !important;
+}
+
+@media (min-width: 768px) {
+    .navbar.top-nav-collapse {
+        padding: 0;
+        background: linear-gradient(150deg, #1e4a93 15%, #1696ff 70%, #82b6d9 94%);
+    }
+}

@@ -477,6 +477,29 @@ def admin_live_score(request):
     return render(request, 'live_score.html',context)
 
 
+    
+@login_required(login_url=reverse_lazy('login_view'))
+@user_passes_test(super_user_check,
+                 login_url=reverse_lazy('permission_denied'))
+def admin_team_list(request):
+    context = {}
+    teams = models.Team.objects.all().values('team_name').distinct().order_by("id")
+    # print(teams)
+    team_list = []
+
+    i = 1
+    for res in teams:
+        item = {}
+        item["id"] = i 
+        item["team_name"] = res["team_name"]
+        item["members"] = models.TeamMember.objects.filter(team__team_name = res["team_name"])
+        team_list.append(item)
+        i = i + 1
+
+    context['team_list'] = team_list
+    return render(request, 'team_list.html',context)
+
+
 # import random
 # import json
 

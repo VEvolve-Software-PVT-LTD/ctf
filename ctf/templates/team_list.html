@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+    {% block extra_code %}
+            {% endblock %}
+{% block app_content %}
+ <!--start slider section-->
+        <section id="hero" class="hero-content hero-slider-section-one" style="height: 100px;">
+                <div class="container">
+                                    <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="hero-content-wrap">
+                             
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mobile-slider-area" style="margin-top: 200px;">
+                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--end slider section-->
+
+        <section class="promo-section ptb-90">
+            <div class="promo-section-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-7 offset-md-7">
+                                    <div id="output"></div>
+		                        <p id="ms"></p>
+                            <table class="table">
+                                <thead class="text-center bg-primary">
+                                    <tr>
+                                        <td>Id</td>
+                                        <td>Team</td>
+                                        <td>Members</td>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    {% for team in team_list %}
+                                    <tr>
+                                        <td>{{team.id}}</td>
+                                        <td>{{team.team_name}}</td>
+                                        <td>
+                                            {% for member in team.members %}
+                                                <p> {{member.member.full_name}} </p>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                    {% endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+{% endblock %}

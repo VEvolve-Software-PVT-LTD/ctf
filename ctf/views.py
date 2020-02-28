@@ -145,6 +145,7 @@ def get_questions_list(request):
         top_ids.append(i.question.id)
     # print(top_ids)
     question_bank = []
+    sorted_qb = []
     instance_question = {}
 
     for i in total_qids:

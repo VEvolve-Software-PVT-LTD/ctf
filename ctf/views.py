@@ -456,7 +456,7 @@ def admin_live_score(request):
         )[:5]
     for i, res in enumerate(results):
         res["rank"] = i + 1
-        res["members"] = models.TeamMember.objects.filter(team__team_name = res["team__team_name"])
+        res["members"] = models.TeamMember.objects.filter(team__team_name = res["team__team_name"]).exclude(member__full_name = res["team__team_name"])
         # print(i)
         # print(res)
         # print(res["team__team_name"])

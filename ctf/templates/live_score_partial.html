@@ -14,7 +14,7 @@
             <td>{{team_score.rank}}</td>
             <td>{{team_score.team__team_name}}</td>
             <td>{{team_score.count}}</td>
-            <td>{{team_score.team__last_question_time | date:'h:i a'}}</td>
+            <td>{{team_score.team__last_question_time | date:'d-m-Y '}}<br>{{team_score.team__last_question_time | date:'h:i a'}}</td>
             <td>
                 {% for member in team_score.members %}
                     {{member.member.full_name}}{% if not forloop.last %}, {% endif %}

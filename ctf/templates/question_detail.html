@@ -97,9 +97,9 @@
                                     {% if question_has_file %}
                                     <div id="question-file-container">
                                         <a class="e-btn small sky " download href="{% static question.question_file_path %}">Download File <span class="fa fa-download"></span></a>
-                                        {% if question_has_image %}
+                                        {% comment %} {% if question_has_image %}
                                             <img src="{% static question.question_file_path %}" /> 
-                                        {% endif %}                                       
+                                        {% endif %}                                        {% endcomment %}
                                     </div>
                                     {% endif %}
 

@@ -306,13 +306,15 @@ def get_clue(request, pk):
         question=question_instance,
         team=request.user.team
     )
-    clue = models.Clue.objects.filter(
-        question=question_instance)[team_question.clue_version]
-    # update team clue version
-    team_question.clue_version = team_question.clue_version +1
-    team_question.save()
-    # update team gain points
-    team_question.update_gain_points(team_question, clue.clue_points)
+    if not team_question.is_completed:
+        clue = models.Clue.objects.filter(
+            question=question_instance)[team_question.clue_version]
+        # update team clue version
+        team_question.clue_version = team_question.clue_version +1
+        team_question.save()
+        # update team gain points
+        team_question.update_gain_points(team_question, clue.clue_points)
+
     # redirects to quesiton page.
     return redirect('question_detail', pk=id)
 
